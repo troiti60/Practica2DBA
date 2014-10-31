@@ -35,16 +35,20 @@ public class Mapa {
     */
     private Map noConectado;
     
-    /**
-    * Constructor
-    *
-    * @author Alexander Straub
-    */
+    	/**
+	* Coordenadas que ocupa el robot en un instante de tiempo
+	*/
+    private int x, y;
+	
+	/**
+	* Constructor
+	*
+	* @author Alexander Straub
+	*/
     private Mapa() {
-	// Iniciando con tamaño de 10 000 para que no haga falta cambiarlo
-	//  muchas vezes y así llevando a ser más eficiente en cuanto a 
-        //  velocidad
-        int tamanoInicial = 10000;
+		// Iniciando con tamaño de 10 000 para que no haga falta cambiarlo
+		//  muchas vezes y así llevando a ser más eficiente en cuanto a velocidad
+		final int tamanoInicial = 10000;
 		
         this.conectado = new HashMap(tamanoInicial);
         this.noConectado = new HashMap(tamanoInicial);
@@ -68,6 +72,34 @@ public class Mapa {
     */
     public Map getNoConectado() {
         return this.noConectado;
+    }
+        
+    	/**
+	* Getter para devolver la coordenada X de la posición del agente
+	*
+	* @author Antonio Troitiño
+	*/
+    public int getX() {
+        return this.x;
+    }
+    
+    	/**
+	* Getter para devolver la coordenada Y de la posición del agente
+	*
+	* @author Antonio Troitiño
+	*/
+    public int getY() {
+        return this.y;
+    }
+    
+       	/**
+	* Setter para establecer la nueva posición del robot
+	*
+	* @author Antonio Troitiño
+	*/
+    public void setCoord(int x1, int y1) {
+        this.x = x1;
+        this.y = y1;
     }
     
     /**

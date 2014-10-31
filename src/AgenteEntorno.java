@@ -20,7 +20,7 @@ public class AgenteEntorno extends SingleAgent{
     ArrayList<Integer> radar;
     ArrayList<Float> scanner;
     float nivelBateria;
-    float x,y,lastx,lasty;
+    int x,y,lastx,lasty;
     int iter;
     Mapa map;
     public AgenteEntorno(AgentID aid, Mapa mapa) throws Exception {
@@ -34,6 +34,7 @@ public class AgenteEntorno extends SingleAgent{
     
     @Override
     public void execute(){
+        //probablemente convenga cambiar esta condición por otra
         while(true){
         ACLMessage inbox=null,outbox=null;
         try {
@@ -113,6 +114,7 @@ public class AgenteEntorno extends SingleAgent{
         map.setCoord(x,y);
         lastx=x;
         lasty=y;
+        iter++;
         
         outbox=new ACLMessage();
         outbox.setSender(this.getAid());
