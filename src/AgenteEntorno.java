@@ -50,31 +50,33 @@ public class AgenteEntorno extends SingleAgent{
         //Si es la primera ejecución, mandamos la información
         //de las 25 casillas percibidas
         if(iter==0){
-                map.addNode(new Nodo(x-2,y-2,radar.get(0),scanner.get(0)));
-                map.addNode(new Nodo(x-1,y-2,radar.get(1),scanner.get(1)));
-                map.addNode(new Nodo(x,y-2,radar.get(2),scanner.get(2)));
-                map.addNode(new Nodo(x+1,y-2,radar.get(3),scanner.get(3)));
-                map.addNode(new Nodo(x+2,y-2,radar.get(4),scanner.get(4)));
-                map.addNode(new Nodo(x-2,y-1,radar.get(5),scanner.get(5)));
-                map.addNode(new Nodo(x-1,y-1,radar.get(6),scanner.get(6)));
-                map.addNode(new Nodo(x,y-1,radar.get(7),scanner.get(7)));
-                map.addNode(new Nodo(x+1,y-1,radar.get(8),scanner.get(8)));
-                map.addNode(new Nodo(x+2,y-1,radar.get(9),scanner.get(9)));
-                map.addNode(new Nodo(x-2,y,radar.get(10),scanner.get(10)));
-                map.addNode(new Nodo(x-1,y,radar.get(11),scanner.get(11)));
-                map.addNode(new Nodo(x,y,radar.get(12),scanner.get(12)));
-                map.addNode(new Nodo(x+1,y,radar.get(13),scanner.get(13)));
-                map.addNode(new Nodo(x+2,y,radar.get(14),scanner.get(14)));
-                map.addNode(new Nodo(x-2,y+1,radar.get(15),scanner.get(15)));
-                map.addNode(new Nodo(x-1,y+1,radar.get(16),scanner.get(16)));
-                map.addNode(new Nodo(x,y+1,radar.get(17),scanner.get(17)));
-                map.addNode(new Nodo(x+1,y+1,radar.get(18),scanner.get(18)));
-                map.addNode(new Nodo(x+2,y+1,radar.get(19),scanner.get(19)));
-                map.addNode(new Nodo(x-2,y+2,radar.get(20),scanner.get(20)));
-                map.addNode(new Nodo(x-1,y+2,radar.get(21),scanner.get(21)));
-                map.addNode(new Nodo(x,y+2,radar.get(22),scanner.get(22)));
-                map.addNode(new Nodo(x+1,y+2,radar.get(23),scanner.get(23)));
-                map.addNode(new Nodo(x+2,y+2,radar.get(24),scanner.get(24)));
+                map.addNodo(new Nodo(x,y,radar.get(12),scanner.get(12)));
+
+            
+                map.addNodo(new Nodo(x-2,y-2,radar.get(0),scanner.get(0)));
+                map.addNodo(new Nodo(x-1,y-2,radar.get(1),scanner.get(1)));
+                map.addNodo(new Nodo(x,y-2,radar.get(2),scanner.get(2)));
+                map.addNodo(new Nodo(x+1,y-2,radar.get(3),scanner.get(3)));
+                map.addNodo(new Nodo(x+2,y-2,radar.get(4),scanner.get(4)));
+                map.addNodo(new Nodo(x-2,y-1,radar.get(5),scanner.get(5)));
+                map.addNodo(new Nodo(x-1,y-1,radar.get(6),scanner.get(6)));
+                map.addNodo(new Nodo(x,y-1,radar.get(7),scanner.get(7)));
+                map.addNodo(new Nodo(x+1,y-1,radar.get(8),scanner.get(8)));
+                map.addNodo(new Nodo(x+2,y-1,radar.get(9),scanner.get(9)));
+                map.addNodo(new Nodo(x-2,y,radar.get(10),scanner.get(10)));
+                map.addNodo(new Nodo(x-1,y,radar.get(11),scanner.get(11)));
+                map.addNodo(new Nodo(x+1,y,radar.get(13),scanner.get(13)));
+                map.addNodo(new Nodo(x+2,y,radar.get(14),scanner.get(14)));
+                map.addNodo(new Nodo(x-2,y+1,radar.get(15),scanner.get(15)));
+                map.addNodo(new Nodo(x-1,y+1,radar.get(16),scanner.get(16)));
+                map.addNodo(new Nodo(x,y+1,radar.get(17),scanner.get(17)));
+                map.addNodo(new Nodo(x+1,y+1,radar.get(18),scanner.get(18)));
+                map.addNodo(new Nodo(x+2,y+1,radar.get(19),scanner.get(19)));
+                map.addNodo(new Nodo(x-2,y+2,radar.get(20),scanner.get(20)));
+                map.addNodo(new Nodo(x-1,y+2,radar.get(21),scanner.get(21)));
+                map.addNodo(new Nodo(x,y+2,radar.get(22),scanner.get(22)));
+                map.addNodo(new Nodo(x+1,y+2,radar.get(23),scanner.get(23)));
+                map.addNodo(new Nodo(x+2,y+2,radar.get(24),scanner.get(24)));
         }else if (lastx!=x&&lasty!=y){
             //en caso de no ser la primera iteración,nos aseguramos de que la 
             //última acción fuese un movimiento, ya que sino no hay que actualizar
@@ -88,26 +90,26 @@ public class AgenteEntorno extends SingleAgent{
                 20  21  22  23  24
             
             */
-                map.addNode(new Nodo(x-2,y-2,radar.get(0),scanner.get(0)));
-                map.addNode(new Nodo(x-1,y-2,radar.get(1),scanner.get(1)));
-                map.addNode(new Nodo(x,y-2,radar.get(2),scanner.get(2)));
-                map.addNode(new Nodo(x+1,y-2,radar.get(3),scanner.get(3)));
-                map.addNode(new Nodo(x+2,y-2,radar.get(4),scanner.get(4)));
+                map.addNodo(new Nodo(x-2,y-2,radar.get(0),scanner.get(0)));
+                map.addNodo(new Nodo(x-1,y-2,radar.get(1),scanner.get(1)));
+                map.addNodo(new Nodo(x,y-2,radar.get(2),scanner.get(2)));
+                map.addNodo(new Nodo(x+1,y-2,radar.get(3),scanner.get(3)));
+                map.addNodo(new Nodo(x+2,y-2,radar.get(4),scanner.get(4)));
                 
-                map.addNode(new Nodo(x-2,y-1,radar.get(5),scanner.get(5)));
-                map.addNode(new Nodo(x+2,y-1,radar.get(9),scanner.get(9)));
+                map.addNodo(new Nodo(x-2,y-1,radar.get(5),scanner.get(5)));
+                map.addNodo(new Nodo(x+2,y-1,radar.get(9),scanner.get(9)));
                 
-                map.addNode(new Nodo(x-2,y,radar.get(10),scanner.get(10)));                
-                map.addNode(new Nodo(x+2,y,radar.get(14),scanner.get(14)));
+                map.addNodo(new Nodo(x-2,y,radar.get(10),scanner.get(10)));                
+                map.addNodo(new Nodo(x+2,y,radar.get(14),scanner.get(14)));
                 
-                map.addNode(new Nodo(x-2,y+1,radar.get(15),scanner.get(15)));
-                map.addNode(new Nodo(x+2,y+1,radar.get(19),scanner.get(19)));
+                map.addNodo(new Nodo(x-2,y+1,radar.get(15),scanner.get(15)));
+                map.addNodo(new Nodo(x+2,y+1,radar.get(19),scanner.get(19)));
                 
-                map.addNode(new Nodo(x-2,y+2,radar.get(20),scanner.get(20)));
-                map.addNode(new Nodo(x-1,y+2,radar.get(21),scanner.get(21)));
-                map.addNode(new Nodo(x,y+2,radar.get(22),scanner.get(22)));
-                map.addNode(new Nodo(x+1,y+2,radar.get(23),scanner.get(23)));
-                map.addNode(new Nodo(x+2,y+2,radar.get(24),scanner.get(24)));
+                map.addNodo(new Nodo(x-2,y+2,radar.get(20),scanner.get(20)));
+                map.addNodo(new Nodo(x-1,y+2,radar.get(21),scanner.get(21)));
+                map.addNodo(new Nodo(x,y+2,radar.get(22),scanner.get(22)));
+                map.addNodo(new Nodo(x+1,y+2,radar.get(23),scanner.get(23)));
+                map.addNodo(new Nodo(x+2,y+2,radar.get(24),scanner.get(24)));
         }
         //Una vez el mapa está actualizado, actualizamos la posición actual y
         //pasada
