@@ -1,3 +1,5 @@
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,12 +30,12 @@ public class Mapa {
     /**
     * Mapa representando el grafo de nodos conectado con la posición del agente
     */
-    private Map conectado;
+    private Map<Integer,Nodo> conectado;
     /**
     * Nodos en un grafo del mapa ya descubierto pero (aún) no conectado con
     * el nodo donde se encuentra el agente
     */
-    private Map noConectado;
+    private Map<Integer,Nodo> noConectado;
     
     	/**
 	* Coordenadas que ocupa el robot en un instante de tiempo
@@ -50,8 +52,8 @@ public class Mapa {
 		//  muchas vezes y así llevando a ser más eficiente en cuanto a velocidad
 		final int tamanoInicial = 10000;
 		
-        this.conectado = new HashMap(tamanoInicial);
-        this.noConectado = new HashMap(tamanoInicial);
+        this.conectado = new HashMap<Integer,Nodo>(tamanoInicial);
+        this.noConectado = new HashMap<Integer,Nodo>(tamanoInicial);
     }
     
     /**
@@ -109,7 +111,83 @@ public class Mapa {
     * @author 
     */
     public void addNodo(Nodo nodoNuevo) {
-        // TODO
+        comprobarVecinos(nodoNuevo);
+    }
+    
+        /**
+    * Actualizar la lista de nodos adyacentes de nodoNuevo
+    *
+    * @param nodoNuevo Nodo cuyos vecinos serán insertados
+    * @author Antonio Troitiño
+    */
+    private void adyacentes(Nodo nodoNuevo) {
+        Nodo aux=null;
+    if(conectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()-1)){
+        aux=conectado.get(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()-1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}
+    if(conectado.containsKey(((nodoNuevo.getX())*1000)+nodoNuevo.getY()-1)){
+        aux=conectado.get(((nodoNuevo.getX())*1000)+nodoNuevo.getY()-1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}        
+    if(conectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()-1)){
+        aux=conectado.get(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()-1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}         
+    if(conectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY())){
+        aux=conectado.get(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY());
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}         
+    if(conectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY())){
+        aux=conectado.get(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY());
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}         
+    if(conectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()+1)){
+        aux=conectado.get(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()+1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}         
+    if(conectado.containsKey(((nodoNuevo.getX())*1000)+nodoNuevo.getY()+1)){
+        aux=conectado.get(((nodoNuevo.getX())*1000)+nodoNuevo.getY()+1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}         
+    if(conectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()+1)){
+        aux=conectado.get(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()+1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);} 
+    
+    if(noConectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()-1)){
+        aux=noConectado.get(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()-1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}
+    if(noConectado.containsKey(((nodoNuevo.getX())*1000)+nodoNuevo.getY()-1)){
+        aux=noConectado.get(((nodoNuevo.getX())*1000)+nodoNuevo.getY()-1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}        
+    if(noConectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()-1)){
+        aux=noConectado.get(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()-1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}         
+    if(noConectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY())){
+        aux=noConectado.get(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY());
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}         
+    if(noConectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY())){
+        aux=noConectado.get(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY());
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}         
+    if(noConectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()+1)){
+        aux=noConectado.get(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()+1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}         
+    if(noConectado.containsKey(((nodoNuevo.getX())*1000)+nodoNuevo.getY()+1)){
+        aux=noConectado.get(((nodoNuevo.getX())*1000)+nodoNuevo.getY()+1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}         
+    if(noConectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()+1)){
+        aux=noConectado.get(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()+1);
+        nodoNuevo.add(aux);
+        aux.add(nodoNuevo);}
+    
     }
     
     /**
@@ -118,10 +196,46 @@ public class Mapa {
     * Si no: añadirlo al "mapa no conectado"
     *
     * @param nodoNuevo Nodo cuyos vecinos serán comprobado
-    * @author 
+    * @author Antonio Troitiño
     */
     private void comprobarVecinos(Nodo nodoNuevo) {
-        // TODO
+        int clave =(nodoNuevo.getX()*1000)+nodoNuevo.getY();
+        //Si es el primer nodo de todos, lo añadimos a conectados directamente
+        //porque desde AgenteEntorno nos hemos asegurado de que sea el nodo
+        //que ocupa el bot, por lo que será un nodo libre y conectado
+        if(conectado.isEmpty()&&noConectado.isEmpty()) conectado.put(clave,nodoNuevo);
+        //Si es un nodo que no ha sido añadido aún y no es un muro, lo procesamos
+        if(!conectado.containsKey(clave)&&!noConectado.containsKey(clave)&&nodoNuevo.getRadar()!=1){
+                //Si tiene algún adyacente en conectado, lo añadimos a conectado
+                if(conectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()-1)||
+                   conectado.containsKey(((nodoNuevo.getX())*1000)+nodoNuevo.getY()-1)||
+                   conectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()-1)||
+                   conectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY())||
+                   conectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY())||
+                   conectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()+1)||
+                   conectado.containsKey(((nodoNuevo.getX())*1000)+nodoNuevo.getY()+1)||
+                   conectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()+1)){
+                    conectado.put(clave, nodoNuevo);
+                    nodoNuevo.setConectado(true);
+                    //y actualizamos su vector de nodos adyacentes
+                    adyacentes(nodoNuevo);
+                    //Si, además de ser un nodo conectado, tiene algún adyacente en
+                    //noconectado, tendremos que llamar a mudarListaNodos para que
+                    //se encargue de añadirlos a todos a conectado
+                    if(noConectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()-1)||
+                       noConectado.containsKey(((nodoNuevo.getX())*1000)+nodoNuevo.getY()-1)||
+                       noConectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()-1)||
+                       noConectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY())||
+                       noConectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY())||
+                       noConectado.containsKey(((nodoNuevo.getX()-1)*1000)+nodoNuevo.getY()+1)||
+                       noConectado.containsKey(((nodoNuevo.getX())*1000)+nodoNuevo.getY()+1)||
+                       noConectado.containsKey(((nodoNuevo.getX()+1)*1000)+nodoNuevo.getY()+1))
+                        mudarListaNodos(nodoNuevo);
+                }else{//Si, por el contrario, no tiene ningún adyacente en conectado
+                      //lo añadimos a noConectado
+                    noConectado.put(clave, nodoNuevo); adyacentes(nodoNuevo);
+                    nodoNuevo.setConectado(false);}
+        }
     }
     
     /**
@@ -130,10 +244,21 @@ public class Mapa {
     * estaban conectado al nodo desplazado
     *
     * @param nodoAnadido Nodo que fue desplazado el último paso
-    * @author 
+    * @author Antonio Troitiño
     */
     private void mudarListaNodos(Nodo nodoAnadido) {
-        // TODO
+        ArrayList<Nodo> ady=nodoAnadido.getAdy();
+        Nodo aux;
+        for(int i=0;i<ady.size();i++){
+            aux=ady.get(i);
+            if(aux.getConectado()==false){
+                aux.setConectado(true);
+                conectado.put(aux.getKey(), aux);
+                noConectado.remove(aux.getKey());
+                mudarListaNodos(aux);
+            }
+            
+        }
     }
     
 }
