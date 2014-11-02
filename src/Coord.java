@@ -69,7 +69,7 @@ public class Coord {
 	* @author Alexander Straub
 	*/
 	public Coord N() {
-		return new Coord(x, y+1);
+		return new Coord(x, y-1);
 	}
 	
 	/**
@@ -89,7 +89,7 @@ public class Coord {
 	* @author Alexander Straub
 	*/
 	public Coord S() {
-		return new Coord(x, y-1);
+		return new Coord(x, y+1);
 	}
 	
 	/**
@@ -109,7 +109,7 @@ public class Coord {
 	* @author Alexander Straub
 	*/
 	public Coord NE() {
-		return new Coord(x+1, y+1);
+		return new Coord(x+1, y-1);
 	}
 	
 	/**
@@ -119,7 +119,7 @@ public class Coord {
 	* @author Alexander Straub
 	*/
 	public Coord SE() {
-		return new Coord(x+1, y-1);
+		return new Coord(x+1, y+1);
 	}
 	
 	/**
@@ -127,8 +127,9 @@ public class Coord {
 	*
 	* @return Coordenada en el suroeste
 	* @author Alexander Straub
-	*/blic Coord SO() {
-		return new Coord(x-1, y-1);
+	*/
+        public Coord SO() {
+		return new Coord(x-1, y+1);
 	}
 	
 	/**
@@ -138,7 +139,7 @@ public class Coord {
 	* @author Alexander Straub
 	*/
 	public Coord NO() {
-		return new Coord(x-1, y+1);
+		return new Coord(x-1, y-1);
 	}
 	
 	/**
@@ -154,11 +155,17 @@ public class Coord {
 		if (!(otro instanceof Coord)) {
 			return false;
 		}
+                if (otro==this) return true;
 
 		Coord segundo = (Coord) otro;
 
-		return this.x == segundo.getX()
-			&& this.y == segundo.getY();
+		return (this.x == segundo.getX()
+			&& this.y == segundo.getY());
 	}
+        
+        @Override
+         public int hashCode() {
+        return (this.x+(this.y*1000));
+    }
 	
 }
