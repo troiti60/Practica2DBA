@@ -13,12 +13,37 @@ import java.util.Map;
  */
 public class TestMapa {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+    public static void test0(){
+            HashMap<Coord,Nodo> conectados=new HashMap<Coord,Nodo>();
+        HashMap<Integer,Nodo> conecta2=new HashMap<Integer,Nodo>();
+        conectados.put(new Coord(0,0), new Nodo(0,0,0,0));
+        conecta2.put(0,new Nodo(0,0,0,0));
+        System.out.println("Conectados está vacío? "+conectados.isEmpty()
+                            +"\nConectados contiene a (0,0)? "+
+                            conectados.containsKey(new Coord(0,0)));
+        System.out.println("Conecta2 está vacío? "+conecta2.isEmpty()
+                            +"\nConectados contiene a (0,0)? "+
+                            conecta2.containsKey(0));
+    
+    }
+    public static void test1(){
+           Mapa map= Mapa.crearInstancia();
+        
+        map.addNodo(new Nodo(0, 0, 0, 0));
+    
+            String cadena=null;
+        HashMap<Coord,Nodo> conectados=map.getConectado();
+        HashMap<Coord,Nodo> noconectados=map.getNoConectado();
+        System.out.println("Conectados está vacío? "+conectados.isEmpty()
+                            +"\nConectados contiene a (0,0)? "+
+                            conectados.containsKey(new Coord(0,0)));
+    
+    }
+    
+    public static void test2(){
         Mapa map= Mapa.crearInstancia();
         map.addNodo(new Nodo(2, 2, 0, 10));
+        
         map.addNodo(new Nodo(0, 0, 0, 0));
         map.addNodo(new Nodo(1, 0, 0, 1));
         map.addNodo(new Nodo(2, 0, 0, 0));
@@ -55,35 +80,31 @@ public class TestMapa {
         grafo conexo, y los nodos de la derecha del no conexo, separados
         de los anteriores por un muro en x=3*/
         String cadena=null;
-        HashMap<Integer,Nodo> conectados=map.getConectado();
-        HashMap<Integer,Nodo> noconectados=map.getNoConectado();
-       /* for(int i=0;i<4;i++){
+        HashMap<Coord,Nodo> conectados=map.getConectado();
+        HashMap<Coord,Nodo> noconectados=map.getNoConectado();
+
+        System.out.println("Comprobamos que los nodos están añadidos donde deben\n"+conectados.containsKey(new Coord(2,2))+"\n");
+         for(int j=0;j<5;j++){
             cadena=new String();
-            for(int j=0;j<3;j++){
-                cadena+=conectados.get(((i*1000)+j)).getConectado()+" ";
+            for(int i=0;i<5;i++){
+                if(!conectados.containsKey(new Coord(i,j))&&!noconectados.containsKey(new Coord(i,j)))
+                        cadena+="X ";
+                else cadena+=(conectados.containsKey(new Coord(i,j)))+" ";
             }
-            cadena+="X "+noconectados.get(((i*1000)+4)).getConectado();
-            System.out.println(cadena);
-        
-        }*/
-        System.out.println("Comprobamos que los nodos están añadidos donde deben\n\n");
-         for(int i=0;i<5;i++){
-            cadena=new String();
-            for(int j=0;j<3;j++){
-                cadena+=conectados.containsKey(((j*1000)+i))+" ";
-            }
-            cadena+=(conectados.containsKey(((3*1000)+i))||noconectados.containsKey(((3*1000)+i)))+" "+noconectados.containsKey(((4*1000)+i));
             System.out.println(cadena);
         
         }
          System.out.println("\n\n"
                  +"Ahora, comprobaremos si los nodos tienen correctamente actualizadas sus variables\n\n");
-        for(int i=0;i<5;i++){
+        for(int j=0;j<5;j++){
             cadena=new String();
-            for(int j=0;j<3;j++){
-                cadena+=conectados.get(((j*1000)+i)).getConectado()+" ";
+            for(int i=0;i<5;i++){
+                if(conectados.containsKey(new Coord(i,j)))
+                    cadena+=conectados.get(new Coord(i,j)).getConectado()+" ";
+                else if(noconectados.containsKey(new Coord(i,j)))
+                    cadena+=noconectados.get(new Coord(i,j)).getConectado()+" ";
+                else cadena+="X ";
             }
-            cadena+="X "+noconectados.get(((4*1000)+i)).getConectado();
             System.out.println(cadena);
         
         }
@@ -103,30 +124,36 @@ public class TestMapa {
         conectados=map.getConectado();
         noconectados=map.getNoConectado();
         System.out.println("Comprobamos que los nodos están añadidos donde deben2\n\n");
-         for(int i=0;i<6;i++){
+         for(int j=0;j<6;j++){
             cadena=new String();
-            for(int j=0;j<3;j++){
-                cadena+=conectados.containsKey(((j*1000)+i))+" ";
+            for(int i=0;i<5;i++){
+                if(!conectados.containsKey(new Coord(i,j))&&!noconectados.containsKey(new Coord(i,j)))
+                        cadena+="X ";
+                else cadena+=(conectados.containsKey(new Coord(i,j))||noconectados.containsKey(new Coord(i,j)))+" ";
             }
-            cadena+=(conectados.containsKey(((3*1000)+i))||noconectados.containsKey(((3*1000)+i)))+" "+conectados.containsKey(((4*1000)+i));
             System.out.println(cadena);
         
         }
          System.out.println("\n\n"
                  +"Ahora, comprobaremos si los nodos tienen correctamente actualizadas sus variables2\n\n");
-        for(int i=0;i<6;i++){
+        for(int j=0;j<6;j++){
             cadena=new String();
-            for(int j=0;j<3;j++){
-                cadena+=conectados.get(((j*1000)+i)).getConectado()+" ";
+            for(int i=0;i<5;i++){
+                if(conectados.containsKey(new Coord(i,j)))
+                    cadena+=conectados.get(new Coord(i,j)).getConectado()+" ";
+                else if(noconectados.containsKey(new Coord(i,j)))
+                    cadena+=noconectados.get(new Coord(i,j)).getConectado()+" ";
+                else cadena+="X ";
             }
-            if((!conectados.containsKey(((3*1000)+i))&&!noconectados.containsKey(((3*1000)+i))))
-            cadena+="X "+conectados.get(((4*1000)+i)).getConectado();
-            else cadena+=conectados.get((((3*1000)+i))).getConectado()+" "+conectados.get(((4*1000)+i)).getConectado();
-            
             System.out.println(cadena);
         
         }
         System.out.println("\n\n");
+    }
+    
+    public static void main(String[] args) {        
+        test2();
+
     }
     
 }
