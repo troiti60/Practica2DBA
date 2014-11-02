@@ -61,5 +61,84 @@ public class Nodo {
     public Coord getCoord() {
 		return this.coord;
 	}
-    
+    	/**
+	* Devolver la coordenada en el norte
+	*
+	* @return Coordenada en el norte
+	* @author Alexander Straub
+	*/
+	public Coord N() {
+		return new Coord(coord.getX(), coord.getY()-1);
+	}
+	
+	/**
+	* Devolver la coordenada en el este
+	*
+	* @return Coordenada en el este
+	* @author Alexander Straub
+	*/
+	public Coord E() {
+		return new Coord(coord.getX()+1,coord.getY() );
+	}
+	
+	/**
+	* Devolver la coordenada en el sur
+	*
+	* @return Coordenada en el sur
+	* @author Alexander Straub
+	*/
+	public Coord S() {
+		return new Coord(coord.getX(), coord.getY()+1);
+	}
+	
+	/**
+	* Devolver la coordenada en el oeste
+	*
+	* @return Coordenada en el oeste
+	* @author Alexander Straub
+	*/
+	public Coord O() {
+		return new Coord(coord.getX()-1, coord.getY());
+	}
+	
+	/**
+	* Devolver la coordenada en el noreste
+	*
+	* @return Coordenada en el noreste
+	* @author Alexander Straub
+	*/
+	public Coord NE() {
+		return new Coord(coord.getX()+1, coord.getY()-1);
+	}
+	
+	/**
+	* Devolver la coordenada en el sureste
+	*
+	* @return Coordenada en el sureste
+	* @author Alexander Straub
+	*/
+	public Coord SE() {
+		return new Coord(coord.getX()+1, coord.getY()+1);
+	}
+	
+	/**
+	* Devolver la coordenada en el suroeste
+	*
+	* @return Coordenada en el suroeste
+	* @author Alexander Straub
+	*/
+        public Coord SO() {
+		return new Coord(coord.getX()-1, coord.getY()+1);
+	}
+	
+	/**
+	* Devolver la coordenada en el noroeste
+	*
+	* @return Coordenada en el noroeste
+	* @author Alexander Straub
+	*/
+	public Coord NO() {
+		return new Coord(coord.getX()-1, coord.getY()-1);
+	}
+	
 }
