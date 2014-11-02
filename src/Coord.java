@@ -162,10 +162,16 @@ public class Coord {
 		return (this.x == segundo.getX()
 			&& this.y == segundo.getY());
 	}
-        
-        @Override
-         public int hashCode() {
-        return (this.x+(this.y*1000));
+    
+	/**
+	* Crear un hash code
+	*
+	* @return Hash code
+	* @author
+	*/
+    @Override
+    public int hashCode() {
+        return (this.x + (this.y * (int)((double)Integer.MAX_VALUE / 2.0)));
     }
 	
 }
