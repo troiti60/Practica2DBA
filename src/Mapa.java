@@ -30,12 +30,12 @@ public class Mapa {
     /**
     * Mapa representando el grafo de nodos conectado con la posición del agente
     */
-    private Map<Integer,Nodo> conectado;
+    private HashMap<Integer,Nodo> conectado;
     /**
     * Nodos en un grafo del mapa ya descubierto pero (aún) no conectado con
     * el nodo donde se encuentra el agente
     */
-    private Map<Integer,Nodo> noConectado;
+    private HashMap<Integer,Nodo> noConectado;
     
     	/**
 	* Coordenadas que ocupa el robot en un instante de tiempo
@@ -62,7 +62,7 @@ public class Mapa {
     * @return Mapa de nodos conectados
     * @author Alexander Straub
     */
-    public Map getConectado() {
+    public HashMap<Integer,Nodo> getConectado() {
         return this.conectado;
     }
     
@@ -72,7 +72,7 @@ public class Mapa {
     * @return Mapa de nodos no conectados
     * @author Alexander Straub
     */
-    public Map getNoConectado() {
+    public HashMap<Integer,Nodo> getNoConectado() {
         return this.noConectado;
     }
         
@@ -203,7 +203,7 @@ public class Mapa {
         //Si es el primer nodo de todos, lo añadimos a conectados directamente
         //porque desde AgenteEntorno nos hemos asegurado de que sea el nodo
         //que ocupa el bot, por lo que será un nodo libre y conectado
-        if(conectado.isEmpty()&&noConectado.isEmpty()) conectado.put(clave,nodoNuevo);
+        if(conectado.isEmpty()&&noConectado.isEmpty()){ conectado.put(clave,nodoNuevo);nodoNuevo.setConectado(true);}
         //Si es un nodo que no ha sido añadido aún y no es un muro, lo procesamos
         if(!conectado.containsKey(clave)&&!noConectado.containsKey(clave)&&nodoNuevo.getRadar()!=1){
                 //Si tiene algún adyacente en conectado, lo añadimos a conectado
