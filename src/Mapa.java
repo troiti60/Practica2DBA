@@ -131,83 +131,83 @@ public class Mapa {
     private void adyacentes(Nodo nodoNuevo) {
         Nodo aux = null;
 		
-		if (this.conectado.containsKey(nodoNuevo.getCoord().NO()) {
+		if (this.conectado.containsKey(nodoNuevo.getCoord().NO())) {
 			aux = this.conectado.get(nodoNuevo.getCoord().NO());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.conectado.containsKey(nodoNuevo.getCoord().N()) {
+		if (this.conectado.containsKey(nodoNuevo.getCoord().N())) {
 			aux = this.conectado.get(nodoNuevo.getCoord().N());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.conectado.containsKey(nodoNuevo.getCoord().NE()) {
+		if (this.conectado.containsKey(nodoNuevo.getCoord().NE())) {
 			aux = this.conectado.get(nodoNuevo.getCoord().NE());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.conectado.containsKey(nodoNuevo.getCoord().E()) {
+		if (this.conectado.containsKey(nodoNuevo.getCoord().E())) {
 			aux = this.conectado.get(nodoNuevo.getCoord().E());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.conectado.containsKey(nodoNuevo.getCoord().SE()) {
+		if (this.conectado.containsKey(nodoNuevo.getCoord().SE())) {
 			aux = this.conectado.get(nodoNuevo.getCoord().SE());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.conectado.containsKey(nodoNuevo.getCoord().S()) {
+		if (this.conectado.containsKey(nodoNuevo.getCoord().S())) {
 			aux = this.conectado.get(nodoNuevo.getCoord().S());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.conectado.containsKey(nodoNuevo.getCoord().SO()) {
+		if (this.conectado.containsKey(nodoNuevo.getCoord().SO())) {
 			aux = this.conectado.get(nodoNuevo.getCoord().SO());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.conectado.containsKey(nodoNuevo.getCoord().O()) {
+		if (this.conectado.containsKey(nodoNuevo.getCoord().O())) {
 			aux = this.conectado.get(nodoNuevo.getCoord().O());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
 		
-		if (this.noConectado.containsKey(nodoNuevo.getCoord().NO()) {
+		if (this.noConectado.containsKey(nodoNuevo.getCoord().NO())) {
 			aux = this.noConectado.get(nodoNuevo.getCoord().NO());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.noConectado.containsKey(nodoNuevo.getCoord().N()) {
+		if (this.noConectado.containsKey(nodoNuevo.getCoord().N())) {
 			aux = this.noConectado.get(nodoNuevo.getCoord().N());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.noConectado.containsKey(nodoNuevo.getCoord().NE()) {
+		if (this.noConectado.containsKey(nodoNuevo.getCoord().NE())) {
 			aux = this.noConectado.get(nodoNuevo.getCoord().NE());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.noConectado.containsKey(nodoNuevo.getCoord().E()) {
+		if (this.noConectado.containsKey(nodoNuevo.getCoord().E())) {
 			aux = this.noConectado.get(nodoNuevo.getCoord().E());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.noConectado.containsKey(nodoNuevo.getCoord().SE()) {
+		if (this.noConectado.containsKey(nodoNuevo.getCoord().SE())) {
 			aux = this.noConectado.get(nodoNuevo.getCoord().SE());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.noConectado.containsKey(nodoNuevo.getCoord().S()) {
+		if (this.noConectado.containsKey(nodoNuevo.getCoord().S())) {
 			aux = this.noConectado.get(nodoNuevo.getCoord().S());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.noConectado.containsKey(nodoNuevo.getCoord().SO()) {
+		if (this.noConectado.containsKey(nodoNuevo.getCoord().SO())) {
 			aux = this.noConectado.get(nodoNuevo.getCoord().SO());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
 		}
-		if (this.noConectado.containsKey(nodoNuevo.getCoord().O()) {
+		if (this.noConectado.containsKey(nodoNuevo.getCoord().O())) {
 			aux = this.noConectado.get(nodoNuevo.getCoord().O());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
@@ -243,7 +243,7 @@ public class Mapa {
                     this.conectado.containsKey(nodoNuevo.SE()) ||
                     this.conectado.containsKey(nodoNuevo.S())  ||
                     this.conectado.containsKey(nodoNuevo.SO()) ||
-                    this.conectado.containsKey(nodoNuevo.O()) {
+                    this.conectado.containsKey(nodoNuevo.O())) {
 				   
                     this.conectado.put(clave, nodoNuevo);
                     nodoNuevo.setConectado(true);
@@ -255,13 +255,13 @@ public class Mapa {
                     //noconectado, tendremos que llamar a mudarListaNodos para que
                     //se encargue de añadirlos a todos a conectado
                     if (this.noConectado.containsKey(nodoNuevo.NO()) ||
-					    this.noConectado.containsKey(nodoNuevo.N())  ||
+			this.noConectado.containsKey(nodoNuevo.N())  ||
                         this.noConectado.containsKey(nodoNuevo.NE()) ||
                         this.noConectado.containsKey(nodoNuevo.E())  ||
                         this.noConectado.containsKey(nodoNuevo.SE()) ||
                         this.noConectado.containsKey(nodoNuevo.S())  ||
                         this.noConectado.containsKey(nodoNuevo.SO()) ||
-                        this.noConectado.containsKey(nodoNuevo.O()) {
+                        this.noConectado.containsKey(nodoNuevo.O()) ){
 						
 						mudarListaNodos(nodoNuevo);
 					}
@@ -269,8 +269,8 @@ public class Mapa {
 					//Si, por el contrario, no tiene ningún adyacente en conectado
                     //lo añadimos a noConectado
                     this.noConectado.put(clave, nodoNuevo);
-					adyacentes(nodoNuevo);
                     nodoNuevo.setConectado(false);
+                    adyacentes(nodoNuevo);
 				}
         }
     }
