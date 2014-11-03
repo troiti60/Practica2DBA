@@ -152,13 +152,11 @@ public class Coord {
 	*/
 	@Override
 	public boolean equals(Object otro) {
-		if (!(otro instanceof Coord)) {
-			return false;
-		}
-                if (otro==this) return true;
+		if (otro == null) return false;
+		if (otro == this) return true;
+		if (!(otro instanceof Coord)) return false;
 
 		Coord segundo = (Coord) otro;
-
 		return (this.x == segundo.getX()
 			&& this.y == segundo.getY());
 	}
