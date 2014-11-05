@@ -165,11 +165,11 @@ public class Coord {
 	* Crear un hash code
 	*
 	* @return Hash code
-	* @author
+	* @author Antonio Troitiño
 	*/
     @Override
     public int hashCode() {
-        return (this.x + (this.y * (int)((double)Integer.MAX_VALUE / 2.0)));
+        return (this.x + (this.y * 1000));
     }
 	
 }
