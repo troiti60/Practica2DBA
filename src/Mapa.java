@@ -322,7 +322,7 @@ public class Mapa {
 						mudarListaNodos(nodoNuevo);
 					}
                 } else {
-					//Si, por el contrario, no tiene ningún adyacente en conectado
+                    //Si, por el contrario, no tiene ningún adyacente en conectado
                     //lo añadimos a noConectado
                     this.noConectado.put(clave, nodoNuevo);
                     nodoNuevo.setConectado(false);
