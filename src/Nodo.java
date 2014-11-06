@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author antonio
  */
-public class Nodo {
+public class Nodo implements Comparable<Nodo> {
     //coordenadas que ocupa el nodo
     private Coord coord;
     //indica si está conectado al nodo que ocupa el bot principal
