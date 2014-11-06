@@ -174,8 +174,7 @@ public class TestMapa {
         
         }
         System.out.println("\n\n");
-        System.out.println(muros.get(new Coord(3,1)).x()+" "+muros.get(new Coord(3,2)).x()
-                +" "+muros.get(new Coord(3,3)).x()+" "+muros.get(new Coord(3,4)).x());
+
     }
     
     public static void main(String[] args) {        
