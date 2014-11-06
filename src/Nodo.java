@@ -17,21 +17,37 @@ public class Nodo {
     private int radar; //radar: 0=libre 1=muro 2=objetivo
     private float scanner;
     private ArrayList<Nodo> adyacentes = new ArrayList<Nodo>();
+    private ArrayList<Nodo> murosAdyacentes = new ArrayList<Nodo>();
+    private int explorado;
 	
     public Nodo(int x, int y, int radar, float scanner) {
         this.coord = new Coord(x, y);
         this.radar = radar;
         this.scanner = scanner;
+        explorado=0;
     }
 	
 	public Nodo(Coord coord, int radar, float scanner) {
         this.coord = coord;
         this.radar = radar;
         this.scanner = scanner;
+        explorado=0;
     }
 	
+    public boolean explored(){
+        if(radar!=1)
+        return (explorado==8);
+        else return false;
+    }
+        
     public void add(Nodo unNodo) {
+                if(unNodo.getRadar()!=1){
 		adyacentes.add(unNodo);
+                explorado++;
+                }else{
+                    explorado++;
+                    murosAdyacentes.add(unNodo);
+                }
 	}
 	
     public int getX() {
@@ -48,6 +64,9 @@ public class Nodo {
 	
     public ArrayList<Nodo> getAdy() {
 		return this.adyacentes;
+	}
+    public ArrayList<Nodo> getMuros() {
+		return this.murosAdyacentes;
 	}
 	
     public void setConectado(boolean con) {
