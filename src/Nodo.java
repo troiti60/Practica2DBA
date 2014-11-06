@@ -299,8 +299,8 @@ public class Nodo implements Comparable<Nodo> {
             if (otro == null) return 0; // TODO: Exception
             if (otro == this) return 0;
             
-            if (otro.getDistancia() < this.distancia) return -1;
-            if (otro.getDistancia() > this.distancia) return 1;
+            if (otro.getDistancia() < this.distancia) return 1;
+            if (otro.getDistancia() > this.distancia) return -1;
             return 0;
         }
         
