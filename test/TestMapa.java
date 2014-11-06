@@ -7,12 +7,16 @@
 import java.util.HashMap;
 import java.util.Map;
 
-/**
+/**Clase de testeo para la clase mapa (y nodo)
  *
  * @author antonio
  */
 public class TestMapa {
-
+    /**
+    * Testeo básico del HashMap y las funciones equals y hashCode de Coord
+    * así como de Integer
+    * @author Antonio Troitiño
+    */
     public static void test0(){
             HashMap<Coord,Nodo> conectados=new HashMap<Coord,Nodo>();
         HashMap<Integer,Nodo> conecta2=new HashMap<Integer,Nodo>();
@@ -26,6 +30,10 @@ public class TestMapa {
                             conecta2.containsKey(0));
     
     }
+    /**
+    * Testeo básico del HashMap y las funciones equals y hashCode de Coord
+    * @author Antonio Troitiño
+    */
     public static void test1(){
            Mapa map= Mapa.crearInstancia();
         
@@ -40,6 +48,11 @@ public class TestMapa {
     
     }
     
+    /**
+    * Testeo básico del Mapa y las funciones comprobar vecinos, mudar lista nodos
+    * y el estado de la variable explorado de los nodos
+    * @author Antonio Troitiño
+    */
     public static void test2(){
         Mapa map= Mapa.crearInstancia();
         map.addNodo(new Nodo(2, 2, 0, 10));
@@ -82,14 +95,19 @@ public class TestMapa {
         String cadena=null;
         HashMap<Coord,Nodo> conectados=map.getConectado();
         HashMap<Coord,Nodo> noconectados=map.getNoConectado();
+        HashMap<Coord,Nodo> muros=map.getMuros();
 
         System.out.println("Comprobamos que los nodos están añadidos donde deben\n"+conectados.containsKey(new Coord(2,2))+"\n");
          for(int j=0;j<5;j++){
             cadena=new String();
             for(int i=0;i<5;i++){
-                if(!conectados.containsKey(new Coord(i,j))&&!noconectados.containsKey(new Coord(i,j)))
+                if(conectados.containsKey(new Coord(i,j)))
+                        cadena+="C ";
+                else if(noconectados.containsKey(new Coord(i,j)))
+                        cadena+="N ";
+                else if(muros.containsKey(new Coord(i,j)))
                         cadena+="X ";
-                else cadena+=(conectados.containsKey(new Coord(i,j)))+" ";
+                else cadena+="? ";
             }
             System.out.println(cadena);
         
@@ -100,10 +118,12 @@ public class TestMapa {
             cadena=new String();
             for(int i=0;i<5;i++){
                 if(conectados.containsKey(new Coord(i,j)))
-                    cadena+=conectados.get(new Coord(i,j)).getConectado()+" ";
+                    cadena+=conectados.get(new Coord(i,j)).explored()+" ";
                 else if(noconectados.containsKey(new Coord(i,j)))
-                    cadena+=noconectados.get(new Coord(i,j)).getConectado()+" ";
-                else cadena+="X ";
+                    cadena+=noconectados.get(new Coord(i,j)).explored()+" ";
+                else if(muros.containsKey(new Coord(i,j)))
+                    cadena+=muros.get(new Coord(i,j)).explored()+" ";
+                else cadena+="? ";
             }
             System.out.println(cadena);
         
@@ -127,9 +147,13 @@ public class TestMapa {
          for(int j=0;j<6;j++){
             cadena=new String();
             for(int i=0;i<5;i++){
-                if(!conectados.containsKey(new Coord(i,j))&&!noconectados.containsKey(new Coord(i,j)))
+               if(conectados.containsKey(new Coord(i,j)))
+                        cadena+="C ";
+                else if(noconectados.containsKey(new Coord(i,j)))
+                        cadena+="N ";
+                else if(muros.containsKey(new Coord(i,j)))
                         cadena+="X ";
-                else cadena+=(conectados.containsKey(new Coord(i,j))||noconectados.containsKey(new Coord(i,j)))+" ";
+                else cadena+="? ";
             }
             System.out.println(cadena);
         
@@ -139,11 +163,13 @@ public class TestMapa {
         for(int j=0;j<6;j++){
             cadena=new String();
             for(int i=0;i<5;i++){
-                if(conectados.containsKey(new Coord(i,j)))
-                    cadena+=conectados.get(new Coord(i,j)).getConectado()+" ";
+                 if(conectados.containsKey(new Coord(i,j)))
+                    cadena+=conectados.get(new Coord(i,j)).explored()+" ";
                 else if(noconectados.containsKey(new Coord(i,j)))
-                    cadena+=noconectados.get(new Coord(i,j)).getConectado()+" ";
-                else cadena+="X ";
+                    cadena+=noconectados.get(new Coord(i,j)).explored()+" ";
+                else if(muros.containsKey(new Coord(i,j)))
+                    cadena+=muros.get(new Coord(i,j)).explored()+" ";
+                else cadena+="? ";
             }
             System.out.println(cadena);
         
