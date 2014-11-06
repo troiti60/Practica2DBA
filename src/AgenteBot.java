@@ -1,4 +1,5 @@
 
+import com.google.gson.JsonElement;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.SingleAgent;
@@ -19,12 +20,14 @@ public class AgenteBot extends SingleAgent{
 	public AgenteBot(AgentID aid) throws Exception {
 		super(aid);
 		
-		saludo = "{\"command\":\"login\"," +
+		/*saludo = "{\"command\":\"login\"," +
 				 "\"world\":\"plainworld\"," + 
 				 "\"radar\":\"bot4\"" +
 				 //"\"radar\":\"" + aid +"\"" + 
-				"}";
+				"}";*/
 		// TODO Auto-generated constructor stub
+                JsonDBA login = new JsonDBA();
+                saludo = login.login("plainworld",null,null,null,null);
 	}
 	
 	public void Saludo(){
@@ -38,7 +41,8 @@ public class AgenteBot extends SingleAgent{
 
 	@Override
     public void execute(){
-	datac = new DatosAcceso();	
+	datac = new DatosAcceso();
+        JsonDBA parse = new JsonDBA();
         System.out.println("\n\nSoy agenteBot funcionando");
         
         try {
@@ -49,7 +53,10 @@ public class AgenteBot extends SingleAgent{
         	
             System.out.println("\nEsperando recibir mensaje...");
             inbox=this.receiveACLMessage();
-            System.out.println("Mensaje recibido" +inbox.getContent()+" de "+inbox.getSender().getLocalName());
+            JsonElement MensajeRecibido = parse.recibirRespuesta(inbox.getContent());
+            JsonElement valorResult = parse.getElement(MensajeRecibido, "result");
+            datac.setKey(valorResult.getAsString());
+            System.out.println("Mensaje recibido: " +valorResult.getAsString()+" de "+inbox.getSender().getLocalName());
 			
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
