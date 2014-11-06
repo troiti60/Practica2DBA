@@ -82,7 +82,14 @@ public class AgenteBot extends SingleAgent{
         */
     }
 	
-	private direccion busqueda() {
+    /**
+     * La búsqueda para encontrar el mejor (con la información
+     * que ya tenemos) camino
+     * 
+     * @return La dirección en que el bot debe moverse
+     * @author Alexander Straub
+     */
+    private direccion busqueda() {
         // Recoger el mapa
         Mapa mapa = Mapa.crearInstancia();
         HashMap<Coord, Nodo> map = mapa.getConectado();
