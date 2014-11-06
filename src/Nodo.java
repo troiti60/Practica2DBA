@@ -35,7 +35,9 @@ public class Nodo {
     }
 	
     public boolean explored(){
+        if(radar!=1)
         return (explorado==8);
+        else return false;
     }
         
     public void add(Nodo unNodo) {
