@@ -5,6 +5,7 @@
  */
 
 
+import static java.lang.Math.sqrt;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +28,10 @@ public class Nodo {
     //Explorado es la suma de los tamaños de adyacentes y murosAdyacentes
     //Si vale 8, se toma el nodo como explorado
     private int explorado;
+	
+	// Variables usadas en la búsqueda
+    private Nodo camino = null;
+    private double distancia = Double.MAX_VALUE;
 	
 /**
     * Constructor de Nodos a partir de:
@@ -141,6 +146,17 @@ public class Nodo {
     public Coord getCoord() {
 		return this.coord;
 	}
+	
+	/**
+	 * Devuelves el valor obtenido por el scanner
+	 *
+	 * @return Distancia al destino (como si no hubiera obstáculos)
+	 * @author Alexander Straub
+	 */
+	public float getScanner() {
+        return this.scanner;
+    }
+	
     	/**
 	* Devolver la coordenada en el norte
 	*
@@ -220,5 +236,87 @@ public class Nodo {
 	public Coord NO() {
 		return new Coord(coord.getX()-1, coord.getY()-1);
 	}
+	
+		/**
+         * Reinstaurar los valores necesitados para una nueva búsqueda
+         * 
+         * @author Alexander Straub
+         */
+        public void resetBusqueda() {
+            this.camino = null;
+            this.distancia = Double.MAX_VALUE;
+        }
+        
+        /**
+         * Setter para guardar el nodo delante en el camino
+         * 
+         * @param nodo Nodo delante en el camino
+         * @author Alexander Straub
+         */
+        public void setCamino(Nodo nodo) {
+            this.camino = nodo;
+        }
+        
+        /**
+         * Getter para devolver el nodo delante en el camino
+         * 
+         * @return Nodo del camino
+         * @author Alexander Straub
+         */
+        public Nodo getCamino() {
+            return this.camino;
+        }
+        
+        /**
+         * Setter para guardar la distancia calculada en la búsqueda
+         * 
+         * @param newDistancia Distancia
+         * @author Alexander Straub
+         */
+        public void setDistancia(double newDistancia) {
+            this.distancia = newDistancia;
+        }
+        
+        /**
+         * Getter para devolver la distancia calculada en la búsqueda
+         * 
+         * @return Distancia
+         * @author Alexander Straub
+         */
+        public double getDistancia() {
+            return this.distancia;
+        }
+
+        /**
+         * Comparar dos Nodos usando sus distancias
+         * 
+         * @param otro Nodo con que comparar
+         * @return -1: otro menos que this, +1: otro más que this, 0: igual
+         * @author Alexander Straub
+         */
+        @Override
+        public int compareTo(Nodo otro) {
+            if (otro == null) return 0; // TODO: Exception
+            if (otro == this) return 0;
+            
+            if (otro.getDistancia() < this.distancia) return -1;
+            if (otro.getDistancia() > this.distancia) return 1;
+            return 0;
+        }
+        
+        /**
+         * Devolver la distancia entre dos nodos que son vecinos
+         * !! Si no son vecinos, devuelve un valor falso !!
+         * 
+         * @param otro Nodo con que comparar
+         * @return Distancia
+         * @author Alexander Straub
+         */
+        public double distanciaA(Nodo otro) {
+            if (otro.getCoord().getX() != this.coord.getX() && 
+                otro.getCoord().getY() != this.coord.getY())
+                return sqrt(2.0);
+            return 1.0;
+        }
 	
 }
