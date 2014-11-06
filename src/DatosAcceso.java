@@ -12,6 +12,7 @@ public class DatosAcceso {
     private String username;
     private String passwd;
     private Boolean ssl;
+    private String key;
 
     public DatosAcceso(){
         host = "siadex.ugr.es";
@@ -44,5 +45,13 @@ public class DatosAcceso {
 
     public Boolean getSSL(){
         return this.ssl;
+    }
+    
+    public void setKey(String key){
+        this.key = key;
+    }
+    
+    public String getKey(){
+        return this.key;
     }
 }
