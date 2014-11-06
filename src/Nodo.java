@@ -60,8 +60,8 @@ public class Nodo {
     * @author Antonio Troitiño
     */
     public boolean explored(){
-        if(radar!=1)
-        return (explorado==8);
+        if(radar!=1&&explorado==8)
+        return true;
         else return false;
     }
 /**
