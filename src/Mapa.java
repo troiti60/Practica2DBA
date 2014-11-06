@@ -36,6 +36,10 @@ public class Mapa {
     * el nodo donde se encuentra el agente
     */
     private HashMap<Coord, Nodo> noConectado;
+        /**
+    * Mapa de Muros descubiertos
+    */
+    private HashMap<Coord, Nodo> muros;
     
     /**
 	* Coordenadas que ocupa el robot en un instante de tiempo
@@ -54,6 +58,7 @@ public class Mapa {
 		
         this.conectado = new HashMap<Coord, Nodo>(tamanoInicial);
         this.noConectado = new HashMap<Coord, Nodo>(tamanoInicial);
+        this.muros=new HashMap<Coord,Nodo>(tamanoInicial);
     }
     
     /**
@@ -211,6 +216,46 @@ public class Mapa {
 			aux = this.noConectado.get(nodoNuevo.getCoord().O());
 			nodoNuevo.add(aux);
 			aux.add(nodoNuevo);
+		}		
+		if (this.muros.containsKey(nodoNuevo.getCoord().NO())) {
+			aux = this.muros.get(nodoNuevo.getCoord().NO());
+			nodoNuevo.add(aux);
+			aux.add(nodoNuevo);
+		}
+		if (this.muros.containsKey(nodoNuevo.getCoord().N())) {
+			aux = this.muros.get(nodoNuevo.getCoord().N());
+			nodoNuevo.add(aux);
+			aux.add(nodoNuevo);
+		}
+		if (this.muros.containsKey(nodoNuevo.getCoord().NE())) {
+			aux = this.muros.get(nodoNuevo.getCoord().NE());
+			nodoNuevo.add(aux);
+			aux.add(nodoNuevo);
+		}
+		if (this.muros.containsKey(nodoNuevo.getCoord().E())) {
+			aux = this.muros.get(nodoNuevo.getCoord().E());
+			nodoNuevo.add(aux);
+			aux.add(nodoNuevo);
+		}
+		if (this.muros.containsKey(nodoNuevo.getCoord().SE())) {
+			aux = this.muros.get(nodoNuevo.getCoord().SE());
+			nodoNuevo.add(aux);
+			aux.add(nodoNuevo);
+		}
+		if (this.muros.containsKey(nodoNuevo.getCoord().S())) {
+			aux = this.muros.get(nodoNuevo.getCoord().S());
+			nodoNuevo.add(aux);
+			aux.add(nodoNuevo);
+		}
+		if (this.muros.containsKey(nodoNuevo.getCoord().SO())) {
+			aux = this.muros.get(nodoNuevo.getCoord().SO());
+			nodoNuevo.add(aux);
+			aux.add(nodoNuevo);
+		}
+		if (this.muros.containsKey(nodoNuevo.getCoord().O())) {
+			aux = this.muros.get(nodoNuevo.getCoord().O());
+			nodoNuevo.add(aux);
+			aux.add(nodoNuevo);
 		}
     }
     
@@ -234,7 +279,8 @@ public class Mapa {
 		}
 		
         //Si es un nodo que no ha sido añadido aún y no es un muro, lo procesamos
-        if (!this.conectado.containsKey(clave) && !this.noConectado.containsKey(clave) && nodoNuevo.getRadar() != 1) {
+        if (!this.conectado.containsKey(clave) && !this.noConectado.containsKey(clave) 
+                && nodoNuevo.getRadar() != 1) {
                 //Si tiene algún adyacente en conectado, lo añadimos a conectado
                 if (this.conectado.containsKey(nodoNuevo.NO()) ||
                     this.conectado.containsKey(nodoNuevo.N())  ||
@@ -272,6 +318,12 @@ public class Mapa {
                     nodoNuevo.setConectado(false);
                     adyacentes(nodoNuevo);
 				}
+        }
+        else if(nodoNuevo.getRadar()==1){
+            if(!muros.containsKey(nodoNuevo.getCoord())){
+                muros.put(nodoNuevo.getCoord(), nodoNuevo);
+                adyacentes(nodoNuevo);
+            }
         }
     }
     
