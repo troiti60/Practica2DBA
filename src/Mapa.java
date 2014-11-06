@@ -49,7 +49,7 @@ public class Mapa {
 	/**
 	* Constructor
 	*
-	* @author Alexander Straub
+	* @author Alexander Straub, Antonio Troitiño
 	*/
     private Mapa() {
 		// Iniciando con tamaño de 10 000 para que no haga falta cambiarlo
@@ -80,7 +80,17 @@ public class Mapa {
     public HashMap<Coord, Nodo> getNoConectado() {
         return this.noConectado;
     }
-        
+     
+    
+        /**
+    * Getter para devolver el mapa de muros
+    *
+    * @return Mapa de nodos no conectados
+    * @author Antonio Troitiño
+    */
+    public HashMap<Coord, Nodo> getMuros() {
+        return this.muros;
+    }
     /**
 	* Getter para devolver la coordenada X de la posición del agente
 	*
