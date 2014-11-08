@@ -286,6 +286,10 @@ public class Mapa {
         if (this.conectado.isEmpty() && this.noConectado.isEmpty()) {
 			this.conectado.put(clave, nodoNuevo);
 			nodoNuevo.setConectado(true);
+			
+			//y actualizamos su vector de nodos adyacentes
+            //(puede ser que ya ha sido añadido un muro)
+            adyacentes(nodoNuevo);
 		}
 		
         //Si es un nodo que no ha sido añadido aún y no es un muro, lo procesamos

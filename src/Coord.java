@@ -1,3 +1,6 @@
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 /**
  * Representa coordenadas en 2D
  *
@@ -141,6 +144,17 @@ public class Coord {
 	public Coord NO() {
 		return new Coord(x-1, y-1);
 	}
+	
+	/**
+	* Calcular la distancia entre las coordenadas
+    * 
+    * @param otro Coordenadas con que comparar
+    * @return Distancia entre las coordenadas
+    * @author Alexander Straub
+    */
+    public double distanciaA(Coord otro) {
+        return sqrt(pow(this.x - otro.getX(), 2.0) + pow(this.y - otro.getY(), 2.0));
+    }
 	
 	/**
 	* Comparar este objeto con otro, devolviendo true si
