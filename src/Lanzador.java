@@ -46,7 +46,7 @@ public class Lanzador {
             // Lanzamiento de las "hebras" de los agentes
             agenteEntorno.start();
             agenteBot.start();
-
+            
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
