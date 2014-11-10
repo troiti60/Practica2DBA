@@ -22,64 +22,126 @@ public class AgenteBot extends SingleAgent{
 	private String saludo;
 	private DatosAcceso datac;
 	
-	private enum direccion { NO, N, NE, E, SE, S, SO, O }
+	private enum direccion { NO, N, NE, E, SE, S, SO, O, R }
 	
 	public AgenteBot(AgentID aid) throws Exception {
 		super(aid);
-		
-		/*saludo = "{\"command\":\"login\"," +
-				 "\"world\":\"plainworld\"," + 
-				 "\"radar\":\"bot4\"" +
-				 //"\"radar\":\"" + aid +"\"" + 
-				"}";*/
-		// TODO Auto-generated constructor stub
                 JsonDBA login = new JsonDBA();
                 saludo = login.login("plainworld",null,null,null,null);
 	}
-	
-	public void Saludo(){
-		outbox = new ACLMessage();
-		outbox.setSender(this.getAid());
-		outbox.setReceiver(new AgentID( datac.getVirtualHost() ));
-		outbox.setContent(this.saludo);
-		
-		this.send(outbox);
-	}
+	    
+    /**
+     * Método inicial de logueo en el servidor
+     * @author Fco Javier Ortega Rodríguez
+     * @return Respuesta del servidor
+     * @throws InterruptedException 
+     */
+    public String Saludo() throws InterruptedException{
+        outbox.setSender(this.getAid());
+        outbox.setReceiver(new AgentID( datac.getVirtualHost() ));
+        outbox.setContent(this.saludo);
+        this.send(outbox);
+        
+        System.out.println("\nSaludo mandado:\n" + saludo);
+        System.out.println("\nEsperando recibir mensaje...");
+        
+        inbox=this.receiveACLMessage();   
+        JsonElement MensajeRecibido = parse.recibirRespuesta(inbox.getContent());
+        JsonElement valorResult = parse.getElement(MensajeRecibido, "result");
+        
+        System.out.println("Mensaje recibido: " +valorResult.getAsString()+" de "+inbox.getSender().getLocalName());
+        
+        return valorResult.getAsString();
+    }
 
-	@Override
+    /**
+     * Método que manda la acción de repostar o el tipo de movimiento 
+     * al servidor
+     * @author Fco Javier Ortega Rodríguez
+     * @param d Acción o dirección a tomar
+     * @return Respuesta del servidor
+     * @throws InterruptedException 
+     */
+    private String RealizarAccion(direccion d) throws InterruptedException{
+        String accion = null;
+        
+        /*
+        accion = cadena JSOn con la accion
+        */
+        
+        outbox.setContent(accion);
+        this.send(outbox);
+        
+        System.out.println("\nAcción mandada:\n" + accion);
+        System.out.println("\nEsperando recibir mensaje...");
+        
+        inbox=this.receiveACLMessage();   
+        JsonElement MensajeRecibido = parse.recibirRespuesta(inbox.getContent());
+        JsonElement valorResult = parse.getElement(MensajeRecibido, "result");
+        
+        System.out.println("Mensaje recibido: " +valorResult.getAsString()+" de "+inbox.getSender().getLocalName());
+        
+        return valorResult.getAsString();
+    }
+    
+    /**
+     * @author Fco Javier Ortega Rodríguez
+     */
+    @Override
     public void execute(){
 	datac = new DatosAcceso();
         JsonDBA parse = new JsonDBA();
         System.out.println("\n\nSoy agenteBot funcionando");
         
         try {
+            
             System.out.print("\nSaludando...");
-            System.out.println("\nSaludo mandado:\n" + saludo);
-            this.Saludo();
+            String key = this.Saludo();
             System.out.print("OK\n");
-        	
-            System.out.println("\nEsperando recibir mensaje...");
-            inbox=this.receiveACLMessage();
-            JsonElement MensajeRecibido = parse.recibirRespuesta(inbox.getContent());
-            JsonElement valorResult = parse.getElement(MensajeRecibido, "result");
-            datac.setKey(valorResult.getAsString());
-            System.out.println("Mensaje recibido: " +valorResult.getAsString()+" de "+inbox.getSender().getLocalName());
-			
+            
+            boolean vivo = true;
+            boolean keyCorrecto = false;
+            float nivelBateria = 0;
+            float MIN_BATERY = 3;
+            direccion decision;
+            String respuesta;
+            
+            if (keyCorrecto){
+                datac.setKey(key);
+            }
+            else{
+                //matar agenteEntorno mesaje
+                vivo = !vivo;
+            }
+            
+            while(vivo)
+                //Esperar NvBateria de agente entorno
+                System.out.println("\nEsperando recibir mensaje...");
+
+                inbox=this.receiveACLMessage();   
+                JsonElement MensajeRecibido = parse.recibirRespuesta(inbox.getContent());
+                JsonElement valorResult = parse.getElement(MensajeRecibido, "batery");
+                nivelBateria = valorResult.getAsFloat();
+                        
+                //heuristica/toma decisión                
+                if(nivelBateria <= MIN_BATERY)
+                    decision = direccion.R;
+                else
+                    decision = this.busqueda();
+                
+                respuesta = this.RealizarAccion(decision);
+                
+                if(respuesta!= "o" || respuesta!="BAD_"){
+                    // Matar agente entorno
+                    vivo = !vivo;
+                }
+               	
+            	
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         
-        
-        /* Saludar al controlador
-         	Esperar su respuesta
-         	si es ok
-         		esperar 4 respuesta de los sensores
-         		calcular moviento (heurística)
-         		mandar mensaje a controlador
-     		si no es ok
-     			error de conexión
-        */
     }
 	
     /**
