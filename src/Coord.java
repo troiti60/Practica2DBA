@@ -144,6 +144,24 @@ public class Coord {
 	public Coord NO() {
 		return new Coord(x-1, y-1);
 	}
+        
+        /**
+         * Devolver las coordenadas del vecino en la dirección dada
+         * 
+         * @param dir Dirección del vecino
+         * @return Coord del vecino
+         * @author Alexander Straub
+         */
+        public Coord vecino(AgenteBot.direccion dir) {
+            if (dir == AgenteBot.direccion.NO) return this.NO();
+            if (dir == AgenteBot.direccion.N) return this.N();
+            if (dir == AgenteBot.direccion.NE) return this.NE();
+            if (dir == AgenteBot.direccion.E) return this.E();
+            if (dir == AgenteBot.direccion.SE) return this.SE();
+            if (dir == AgenteBot.direccion.S) return this.S();
+            if (dir == AgenteBot.direccion.SO) return this.SO();
+            return this.O();
+        }
 	
 	/**
 	* Calcular la distancia entre las coordenadas

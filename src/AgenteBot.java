@@ -23,7 +23,10 @@ public class AgenteBot extends SingleAgent{
 	private DatosAcceso datac;
         private JsonDBA parse;
 	
-	private enum direccion { NO, N, NE, E, SE, S, SO, O, R }
+	public enum direccion { NO, N, NE, E, SE, S, SO, O, R }
+        
+        private ArrayList<direccion> camino = new ArrayList<direccion>();
+        private boolean llegarAlDestino = false;
 	
 	public AgenteBot(AgentID aid) throws Exception {
 		super(aid);
@@ -130,6 +133,34 @@ public class AgenteBot extends SingleAgent{
                 else
                     decision = this.busqueda();
                 
+                // Alternativamente se puede utilizar la función de búsqueda que
+                // devuelve un camino completo hasta un nodo prometedor, o si
+                // al tiro, al destino.
+                //
+                // Una heurística posible sería:
+                //  Si es posible llegar al destino, ir el camino completo
+                //  Si no:
+                //   Si hay que ir atrás, es decir seguir un camino con nodos
+                //    ya visitado, para estando en el primer nodo aún no visitado
+                //   Si el nodo aún no era visitado, ir paso a paso
+                /*
+                if (nivelBateria <= MIN_BATERY) {
+                    decision = direccion.R;
+                } else {
+                    if (this.camino == null || this.camino.isEmpty()) {
+                        this.llegarAlDestino = busqueda(this.camino);
+                    }
+                    
+                    decision = this.camino.remove(0);
+                    
+                    if (this.llegarAlDestino == false && !Mapa.crearInstancia()
+                            .getConectado().get(Mapa.crearInstancia()
+                            .getCoord().vecino(decision)).isVisitado()) {
+                        this.camino.clear();
+                    }
+                }
+                */
+                
                 respuesta = this.RealizarAccion(decision);
                 
                 if(respuesta!= "o" || respuesta!="BAD_"){
@@ -230,6 +261,94 @@ public class AgenteBot extends SingleAgent{
         if (paso.getCoord().equals(nodoInicial.O())) return direccion.O;
         
         return direccion.SO; // TODO: Exception
+    }
+	
+	/**
+     * La búsqueda para encontrar el mejor (con la información
+     * que ya tenemos) camino
+     * 
+     * @return La dirección en que el bot debe moverse
+     * @author Alexander Straub
+     */
+    private static boolean busqueda(ArrayList<direccion> direcciones) {
+        // Recoger el mapa
+        Mapa mapa = Mapa.crearInstancia();
+        HashMap<Coord, Nodo> map = mapa.getConectado();
+        
+        // Inicializar
+        List<Nodo> nodos = new ArrayList(map.values());
+        for (Iterator<Nodo> i = nodos.iterator(); i.hasNext(); )
+            i.next().resetBusqueda();
+        Nodo nodoInicial = map.get(mapa.getCoord());
+        nodoInicial.setDistancia(0.0);
+        
+        // Trata como el nodo destino
+        double distancia = Double.MAX_VALUE;
+        Nodo camino = null;
+        Nodo destino = null;
+        
+        // Si aún hay nodos en la lista, sigue
+        while (!nodos.isEmpty()) {
+            // Recoger el nodo en la lista con menos distancia al origin
+            Nodo minNodo = (Nodo)Collections.min(nodos);
+            nodos.remove(minNodo);
+            
+            if (minNodo.getRadar() == 2) destino = minNodo;
+            
+            // Recoger los vecinos del nodo actual
+            for (Iterator<Nodo> i = minNodo.getAdy().iterator(); i.hasNext(); ) {
+                Nodo vecino = i.next();
+                
+                // Si aún está en la lista
+                if (nodos.contains(vecino)) {
+                    // Calcular distancia alternativa
+                    double alternativa = minNodo.getDistancia() 
+                            + vecino.distanciaA(minNodo);
+                    
+                    // Si es mejor, usar la distancia alternativa con el
+                    // camino correspondiente
+                    if (alternativa < vecino.getDistancia()) {
+                        vecino.setDistancia(alternativa);
+                        vecino.setCamino(minNodo);
+                    }
+                }
+            }
+            
+            // Si el entorno aún no está descubierto completamente
+            if (!minNodo.explored()) {
+                // También calcular distancia alternativa al destino,
+                // como si no hubiera obstáculos desde ahí
+                double alternativa = minNodo.getDistancia() 
+                        + minNodo.getScanner();
+                
+                // Si es mejor: actualizar
+                if (alternativa < distancia) {
+                    distancia = alternativa;
+                    camino = minNodo;
+                }
+            }
+        }
+        
+        // Empezando con el nodo del destino ir atrás hasta haber 
+        // encontrado el vecino de la posición del robot
+        if (destino != null) camino = destino;
+        Nodo paso = camino;
+        while (paso != nodoInicial && paso != null) {
+            if (paso.getCoord().equals(paso.getCamino().NO())) direcciones.add(direccion.NO);
+            else if (paso.getCoord().equals(paso.getCamino().N())) direcciones.add(direccion.N);
+            else if (paso.getCoord().equals(paso.getCamino().NE())) direcciones.add(direccion.NE);
+            else if (paso.getCoord().equals(paso.getCamino().E())) direcciones.add(direccion.E);
+            else if (paso.getCoord().equals(paso.getCamino().SE())) direcciones.add(direccion.SE);
+            else if (paso.getCoord().equals(paso.getCamino().S())) direcciones.add(direccion.S);
+            else if (paso.getCoord().equals(paso.getCamino().SO())) direcciones.add(direccion.SO);
+            else if (paso.getCoord().equals(paso.getCamino().O())) direcciones.add(direccion.O);
+            
+            paso = paso.getCamino();
+        }
+        
+        // Devolver dirección
+        Collections.reverse(direcciones);
+        return destino != null;
     }
 
 }
