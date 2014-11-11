@@ -21,6 +21,7 @@ public class AgenteBot extends SingleAgent{
 	private ACLMessage inbox,outbox;
 	private String saludo;
 	private DatosAcceso datac;
+        private JsonDBA parse;
 	
 	private enum direccion { NO, N, NE, E, SE, S, SO, O, R }
 	
