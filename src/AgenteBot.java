@@ -37,7 +37,7 @@ public class AgenteBot extends SingleAgent{
 	    
     /**
      * Método inicial de logueo en el servidor
-     * @author Fco Javier Ortega Rodríguez
+     * @author Fco Javier Ortega Rodríguez y José Carlos Alfaro
      * @return Respuesta del servidor
      * @throws InterruptedException 
      */
@@ -62,7 +62,7 @@ public class AgenteBot extends SingleAgent{
     /**
      * Método que manda la acción de repostar o el tipo de movimiento 
      * al servidor
-     * @author Fco Javier Ortega Rodríguez
+     * @author Fco Javier Ortega Rodríguez y José Carlos Alfaro
      * @param d Acción o dirección a tomar
      * @return Respuesta del servidor
      * @throws InterruptedException 
