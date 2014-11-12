@@ -81,6 +81,7 @@ public class AgenteBot extends SingleAgent{
      * @throws InterruptedException 
      */
     public String Saludo() throws InterruptedException{
+		outbox = new ACLMessage();
         outbox.setSender(this.getAid());
         outbox.setReceiver(new AgentID( datac.getVirtualHost() ));
         outbox.setContent(this.saludo);
@@ -135,7 +136,7 @@ public class AgenteBot extends SingleAgent{
     @Override
     public void execute(){
 	datac = new DatosAcceso();
-        JsonDBA parse = new JsonDBA();
+        parse = new JsonDBA();
         System.out.println("\n\nSoy agenteBot funcionando");
         
         try {
