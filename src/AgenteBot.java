@@ -7,6 +7,7 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -22,7 +23,6 @@ public class AgenteBot extends SingleAgent{
 	private String saludo;
 	private DatosAcceso datac;
         private JsonDBA parse;
-	
 	private enum direccion { NO, N, NE, E, SE, S, SO, O, R }
 	
 	public AgenteBot(AgentID aid) throws Exception {
@@ -49,7 +49,7 @@ public class AgenteBot extends SingleAgent{
         inbox=this.receiveACLMessage();   
         JsonElement MensajeRecibido = parse.recibirRespuesta(inbox.getContent());
         JsonElement valorResult = parse.getElement(MensajeRecibido, "result");
-        
+       
         System.out.println("Mensaje recibido: " +valorResult.getAsString()+" de "+inbox.getSender().getLocalName());
         
         return valorResult.getAsString();
@@ -65,10 +65,11 @@ public class AgenteBot extends SingleAgent{
      */
     private String RealizarAccion(direccion d) throws InterruptedException{
         String accion = null;
+        LinkedHashMap lhmap = new LinkedHashMap();      // HashMap pero respetando el orden de insercion
         
-        /*
-        accion = cadena JSOn con la accion
-        */
+        lhmap.put("command", d);
+        lhmap.put("key", datac.getKey());
+        accion = parse.crearJson(lhmap);
         
         outbox.setContent(accion);
         this.send(outbox);
