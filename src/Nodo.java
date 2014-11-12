@@ -28,6 +28,8 @@ public class Nodo implements Comparable<Nodo> {
     //Explorado es la suma de los tamaños de adyacentes y murosAdyacentes
     //Si vale 8, se toma el nodo como explorado
     private int explorado;
+    //Indica si el nodo ya era visitado
+    private boolean visitado = false;
 	
 	// Variables usadas en la búsqueda
     private Nodo camino = null;
@@ -69,6 +71,27 @@ public class Nodo implements Comparable<Nodo> {
         return true;
         else return false;
     }
+    
+    /**
+     * Marcar nodo como visitado
+     * 
+     * @author Alexander Straub
+     */
+    public void setVisitado() {
+        this.visitado = true;
+    }
+    
+    /**
+     * Indicar si el nodo ya era visitado
+     * 
+     * @return True si ya era visitado
+     * @author Alexander Straub
+     */
+    public boolean isVisitado() {
+        return this.visitado;
+    }
+    
+    
 /**
     * Añade un nodo adyacente al arrayList correspondiente
     * @param unNodo Nodo que hay que añadir a las listas
