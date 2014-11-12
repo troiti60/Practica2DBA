@@ -24,7 +24,46 @@ public class AgenteBot extends SingleAgent{
 	private DatosAcceso datac;
         private JsonDBA parse;
 	
-	public enum direccion { NO, N, NE, E, SE, S, SO, O, R }
+        /**
+         * Enum de las acciones posibles
+         * 
+         * @author Alexander Straub
+         */
+	public enum direccion {
+            NO("moveNW"),
+            N("moveN"),
+            NE("moveNE"),
+            E("moveE"),
+            SE("moveSE"),
+            S("moveS"),
+            SO("moveSW"),
+            O("moveW"),
+            R("refuel");
+            
+            // El string que define la acción
+            private final String command;
+
+            /**
+             * Constructor
+             * 
+             * @param command El string que define la acción
+             * @author Alexander Straub
+             */
+            private direccion(final String command) {
+		this.command = command;
+            }
+
+            /**
+             * Devolver el string que define la acción
+             * 
+             * @return El string que define la acción
+             * @author Alexander Straub
+             */
+            @Override
+            public String toString() {
+		return this.command;
+            }
+	}
         
         private ArrayList<direccion> camino = new ArrayList<direccion>();
         private boolean llegarAlDestino = false;
@@ -71,7 +110,7 @@ public class AgenteBot extends SingleAgent{
         String accion = null;
         LinkedHashMap lhmap = new LinkedHashMap();      // HashMap pero respetando el orden de insercion
         
-        lhmap.put("command", d);
+        lhmap.put("command", d.toString());
         lhmap.put("key", datac.getKey());
         accion = parse.crearJson(lhmap);
         
