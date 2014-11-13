@@ -11,6 +11,7 @@ import java.util.HashMap;
  * @author antonio
  */
 public class TestMapa {
+    public static int testea = 2;
     /**
     * Testeo básico del HashMap y las funciones equals y hashCode de Coord
     * así como de Integer
@@ -177,8 +178,13 @@ public class TestMapa {
 
     }
     
-    public static void main(String[] args) {        
-        test2();
+    public static void main(String[] args) { 
+        if (testea==0)
+            test0();
+        else if (testea==1)
+            test1();
+        else if (testea==2)
+            test2();
 
     }
     
