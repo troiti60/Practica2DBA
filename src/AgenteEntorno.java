@@ -1,8 +1,11 @@
 
+import com.google.gson.JsonElement;
+import com.mysql.jdbc.util.LRUCache;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.SingleAgent;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,8 +16,8 @@ import java.util.logging.Logger;
  */
 
 /**
- *
- * @author antonio
+ * Clase Agente Entorno encargado de recoger la información de los sensores
+ * @author Antonio Troitiño y Jose Carlos Alfaro
  */
 public class AgenteEntorno extends SingleAgent{
     ArrayList<Integer> radar;
@@ -23,7 +26,9 @@ public class AgenteEntorno extends SingleAgent{
     Coord coord, lastCoord;
     int iter;
     Mapa mapa;
-	
+    JsonDBA parser;
+    String strJson;
+    JsonElement json,result;
     public AgenteEntorno(AgentID aid, Mapa mapa) throws Exception {
         super(aid);
         this.radar = new ArrayList<Integer>(25);
@@ -31,23 +36,52 @@ public class AgenteEntorno extends SingleAgent{
         this.iter = 0;
         this.mapa = mapa;
     }
-    
+    /**
+     * Funcion de ejecucion del bot AgenteEntorno
+     * @author Antonio Troitiño y Jose Carlos Alfaro
+     */
     @Override
     public void execute() {
+        boolean vivo=true;
         //probablemente convenga cambiar esta condición por otra
-        while(true) {
+        while(vivo) {
 			ACLMessage inbox = null, outbox = null;
-			
-			try {
-				inbox = this.receiveACLMessage();
-			} catch (InterruptedException ex) {
-				Logger.getLogger(AgenteEntorno.class.getName()).log(Level.SEVERE, null, ex);
-				System.err.println("Error al recibir mensaje");
-			}
-			
-			/* Código para parsear el mensaje mediante JSON*/
-			/*     */
-			
+                        
+                        for(int i = 0;i<3 && vivo;i++){
+                            try {
+                                    inbox = this.receiveACLMessage();
+                                    strJson = inbox.getContent();
+                                    json = parser.recibirRespuesta(strJson);
+                                    
+                            } catch (InterruptedException ex) {
+                                    Logger.getLogger(AgenteEntorno.class.getName()).log(Level.SEVERE, null, ex);
+                                    System.err.println("Error al recibir mensaje");
+                            }
+                            
+                            if(inbox.getSender() == new AgentID("botPrincipal"))
+                                vivo = false;
+                            
+                                else if(parser.contains(strJson, "scanner"))
+                                {
+                                    
+                                    result  = parser.getElement(json, "scanner");
+                                    scanner = parser.jsonElementToArrayFloat(result);
+
+                                }else if(parser.contains(strJson, "radar"))
+                                {
+                                    
+                                    result = parser.getElement(json, "radar");
+                                    radar  = parser.jsonElementToArrayInt(result);
+
+                                }else if(parser.contains(strJson, "bateria"))
+                                {
+                                   result       = parser.getElement(json, "bateria");
+                                   nivelBateria = result.getAsFloat();
+                                }
+                            
+                        }
+                        
+                        if(vivo){
 			//Si es la primera ejecución, mandamos la información
 			//de las 25 casillas percibidas
 			if (iter == 0) {
@@ -120,10 +154,14 @@ public class AgenteEntorno extends SingleAgent{
 			
 			outbox = new ACLMessage();
 			outbox.setSender(this.getAid());
-			outbox.setReceiver(new AgentID("AgenteBotPrincipal"));
-			/*quizá convenga meter esto con JSON también!*/
-			outbox.setContent("bateria"+nivelBateria);
+			outbox.setReceiver(new AgentID("botPrincipal"));
+                  
+                        LinkedHashMap lhm = new LinkedHashMap();
+                        lhm.put("bateria", nivelBateria);
+                        
+			outbox.setContent(parser.crearJson(lhm));
         
 		}
+            }
     }
 }

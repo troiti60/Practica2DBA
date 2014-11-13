@@ -109,7 +109,7 @@ public class JsonDBA {
     //*******************************   FUNCIONES AUXILIARES *******************************************//
     //**************************************************************************************************//
     
-    public void JsonElementToArrayFloat(JsonElement cadena)
+    public ArrayList<Float> jsonElementToArrayFloat(JsonElement cadena)
     {
        //JsonParser parser = new JsonParser();
        ArrayList <Float> arr_float = new ArrayList<>();
@@ -120,6 +120,25 @@ public class JsonDBA {
        {
             arr_float.add(jse.getAsFloat());
        }
-       System.out.print(arr_float);     
+       return arr_float;   
+    }
+    
+    public ArrayList<Integer> jsonElementToArrayInt(JsonElement cadena)
+    {
+       //JsonParser parser = new JsonParser();
+       ArrayList <Integer> arr_int = new ArrayList<>();
+       JsonElement element = parser.parse(cadena.getAsString());
+       JsonArray jsArray = element.getAsJsonArray(); 
+       
+       for(JsonElement jse: jsArray)
+       {
+            arr_int.add(jse.getAsInt());
+       }
+       return arr_int;   
+    }
+    
+    public boolean contains(String cadena,String key)
+    {
+        return cadena.contains(key);
     }
 }

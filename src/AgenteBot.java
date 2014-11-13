@@ -159,7 +159,7 @@ public class AgenteBot extends SingleAgent{
                 vivo = !vivo;
             }
             
-            while(vivo)
+            while(vivo)                                  
                 //Esperar NvBateria de agente entorno
                 System.out.println("\nEsperando recibir mensaje...");
 
