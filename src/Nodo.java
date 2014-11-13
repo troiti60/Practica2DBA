@@ -8,9 +8,9 @@
 import static java.lang.Math.sqrt;
 import java.util.ArrayList;
 
-/**
+/** Clase nodo que representa un nodo del mapa
  *
- * @author antonio
+ * @author Antonio, Alexander Straub
  */
 public class Nodo implements Comparable<Nodo> {
     //coordenadas que ocupa el nodo
