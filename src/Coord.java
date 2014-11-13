@@ -7,201 +7,221 @@ import static java.lang.Math.sqrt;
  * @author Alexander Straub
  */
 public class Coord {
-	
-	/**
-	* Coordenadas
-	*/
-	private int x, y;
-	
-	/**
-	* Getter devolviendo la coordenada X
-	*
-	* @return Coordenada X
-	* @author Alexander Straub
-	*/
-	public int getX() {
-		return this.x;
-	}
-	
-	/**
-	* Setter parar guardar un nuevo valor de X
-	*
-	* @param newX Nuevo valor de X
-	* @author Alexander Straub
-	*/
-	public void setX(int newX) {
-		this.x = newX;
-	}
-	
-	/**
-	* Getter devolviendo la coordenada Y
-	*
-	* @return Coordenada Y
-	* @author Alexander Straub
-	*/
-	public int getY() {
-		return this.y;
-	}
-	
-	/**
-	* Setter parar guardar un nuevo valor de Y
-	*
-	* @param newY Nuevo valor de Y
-	* @author Alexander Straub
-	*/
-	public void setY(int newY) {
-		this.y = newY;
-	}
-	
-	/**
-	* Constructor
-	*
-	* @param x Coordenada X
-	* @param y Coordenada Y
-	* @author Alexander Straub
-	*/
-	public Coord(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-	
-	/**
-	* Devolver la coordenada en el norte
-	*
-	* @return Coordenada en el norte
-	* @author Alexander Straub
-	*/
-	public Coord N() {
-		return new Coord(x, y-1);
-	}
-	
-	/**
-	* Devolver la coordenada en el este
-	*
-	* @return Coordenada en el este
-	* @author Alexander Straub
-	*/
-	public Coord E() {
-		return new Coord(x+1, y);
-	}
-	
-	/**
-	* Devolver la coordenada en el sur
-	*
-	* @return Coordenada en el sur
-	* @author Alexander Straub
-	*/
-	public Coord S() {
-		return new Coord(x, y+1);
-	}
-	
-	/**
-	* Devolver la coordenada en el oeste
-	*
-	* @return Coordenada en el oeste
-	* @author Alexander Straub
-	*/
-	public Coord O() {
-		return new Coord(x-1, y);
-	}
-	
-	/**
-	* Devolver la coordenada en el noreste
-	*
-	* @return Coordenada en el noreste
-	* @author Alexander Straub
-	*/
-	public Coord NE() {
-		return new Coord(x+1, y-1);
-	}
-	
-	/**
-	* Devolver la coordenada en el sureste
-	*
-	* @return Coordenada en el sureste
-	* @author Alexander Straub
-	*/
-	public Coord SE() {
-		return new Coord(x+1, y+1);
-	}
-	
-	/**
-	* Devolver la coordenada en el suroeste
-	*
-	* @return Coordenada en el suroeste
-	* @author Alexander Straub
-	*/
-        public Coord SO() {
-		return new Coord(x-1, y+1);
-	}
-	
-	/**
-	* Devolver la coordenada en el noroeste
-	*
-	* @return Coordenada en el noroeste
-	* @author Alexander Straub
-	*/
-	public Coord NO() {
-		return new Coord(x-1, y-1);
-	}
-        
-        /**
-         * Devolver las coordenadas del vecino en la dirección dada
-         * 
-         * @param dir Dirección del vecino
-         * @return Coord del vecino
-         * @author Alexander Straub
-         */
-        public Coord vecino(AgenteBot.direccion dir) {
-            if (dir == AgenteBot.direccion.NO) return this.NO();
-            if (dir == AgenteBot.direccion.N) return this.N();
-            if (dir == AgenteBot.direccion.NE) return this.NE();
-            if (dir == AgenteBot.direccion.E) return this.E();
-            if (dir == AgenteBot.direccion.SE) return this.SE();
-            if (dir == AgenteBot.direccion.S) return this.S();
-            if (dir == AgenteBot.direccion.SO) return this.SO();
-            return this.O();
+
+    /**
+     * Coordenadas
+     */
+    private int x, y;
+
+    /**
+     * Getter devolviendo la coordenada X
+     *
+     * @return Coordenada X
+     * @author Alexander Straub
+     */
+    public int getX() {
+        return this.x;
+    }
+
+    /**
+     * Setter parar guardar un nuevo valor de X
+     *
+     * @param newX Nuevo valor de X
+     * @author Alexander Straub
+     */
+    public void setX(int newX) {
+        this.x = newX;
+    }
+
+    /**
+     * Getter devolviendo la coordenada Y
+     *
+     * @return Coordenada Y
+     * @author Alexander Straub
+     */
+    public int getY() {
+        return this.y;
+    }
+
+    /**
+     * Setter parar guardar un nuevo valor de Y
+     *
+     * @param newY Nuevo valor de Y
+     * @author Alexander Straub
+     */
+    public void setY(int newY) {
+        this.y = newY;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param x Coordenada X
+     * @param y Coordenada Y
+     * @author Alexander Straub
+     */
+    public Coord(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     * Devolver la coordenada en el norte
+     *
+     * @return Coordenada en el norte
+     * @author Alexander Straub
+     */
+    public Coord N() {
+        return new Coord(x, y - 1);
+    }
+
+    /**
+     * Devolver la coordenada en el este
+     *
+     * @return Coordenada en el este
+     * @author Alexander Straub
+     */
+    public Coord E() {
+        return new Coord(x + 1, y);
+    }
+
+    /**
+     * Devolver la coordenada en el sur
+     *
+     * @return Coordenada en el sur
+     * @author Alexander Straub
+     */
+    public Coord S() {
+        return new Coord(x, y + 1);
+    }
+
+    /**
+     * Devolver la coordenada en el oeste
+     *
+     * @return Coordenada en el oeste
+     * @author Alexander Straub
+     */
+    public Coord O() {
+        return new Coord(x - 1, y);
+    }
+
+    /**
+     * Devolver la coordenada en el noreste
+     *
+     * @return Coordenada en el noreste
+     * @author Alexander Straub
+     */
+    public Coord NE() {
+        return new Coord(x + 1, y - 1);
+    }
+
+    /**
+     * Devolver la coordenada en el sureste
+     *
+     * @return Coordenada en el sureste
+     * @author Alexander Straub
+     */
+    public Coord SE() {
+        return new Coord(x + 1, y + 1);
+    }
+
+    /**
+     * Devolver la coordenada en el suroeste
+     *
+     * @return Coordenada en el suroeste
+     * @author Alexander Straub
+     */
+    public Coord SO() {
+        return new Coord(x - 1, y + 1);
+    }
+
+    /**
+     * Devolver la coordenada en el noroeste
+     *
+     * @return Coordenada en el noroeste
+     * @author Alexander Straub
+     */
+    public Coord NO() {
+        return new Coord(x - 1, y - 1);
+    }
+
+    /**
+     * Devolver las coordenadas del vecino en la dirección dada
+     *
+     * @param dir Dirección del vecino
+     * @return Coord del vecino
+     * @author Alexander Straub
+     */
+    public Coord vecino(AgenteBot.Accion dir) {
+        if (dir == AgenteBot.Accion.NO) {
+            return this.NO();
         }
-	
-	/**
-	* Calcular la distancia entre las coordenadas
-    * 
-    * @param otro Coordenadas con que comparar
-    * @return Distancia entre las coordenadas
-    * @author Alexander Straub
-    */
+        if (dir == AgenteBot.Accion.N) {
+            return this.N();
+        }
+        if (dir == AgenteBot.Accion.NE) {
+            return this.NE();
+        }
+        if (dir == AgenteBot.Accion.E) {
+            return this.E();
+        }
+        if (dir == AgenteBot.Accion.SE) {
+            return this.SE();
+        }
+        if (dir == AgenteBot.Accion.S) {
+            return this.S();
+        }
+        if (dir == AgenteBot.Accion.SO) {
+            return this.SO();
+        }
+        return this.O();
+    }
+
+    /**
+     * Calcular la distancia entre las coordenadas
+     *
+     * @param otro Coordenadas con que comparar
+     * @return Distancia entre las coordenadas
+     * @author Alexander Straub
+     */
     public double distanciaA(Coord otro) {
         return sqrt(pow(this.x - otro.getX(), 2.0) + pow(this.y - otro.getY(), 2.0));
     }
-	
-	/**
-	* Comparar este objeto con otro, devolviendo true si
-	* las coordenadas coinciden
-	*
-	* @param otro Objeto con que comparar
-	* @return True si las coordenadas coinciden
-	* @author Alexander Straub
-	*/
-	@Override
-	public boolean equals(Object otro) {
-		if (otro == null) return false;
-		if (otro == this) return true;
-		if (!(otro instanceof Coord)) return false;
 
-		Coord segundo = (Coord) otro;
-		return (this.x == segundo.getX()
-			&& this.y == segundo.getY());
-	}
-    
-	/**
-	* Crear un hash code
-	*
-	* @return Hash code
-	* @author Antonio Troitiño
-	*/
+    /**
+     * Comparar este objeto con otro, devolviendo true si las coordenadas
+     * coinciden
+     *
+     * @param otro Objeto con que comparar
+     * @return True si las coordenadas coinciden
+     * @author Alexander Straub
+     */
+    @Override
+    public boolean equals(Object otro) {
+        if (otro == null) {
+            return false;
+        }
+        if (otro == this) {
+            return true;
+        }
+        if (!(otro instanceof Coord)) {
+            return false;
+        }
+
+        Coord segundo = (Coord) otro;
+        return (this.x == segundo.getX()
+                && this.y == segundo.getY());
+    }
+
+    /**
+     * Crear un hash code
+     *
+     * @return Hash code
+     * @author Antonio Troitiño
+     */
     @Override
     public int hashCode() {
         return (this.x + (this.y * 1000));
     }
-	
+
 }

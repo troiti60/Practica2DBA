@@ -4,7 +4,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 public class TestComunicacion {
 
     public static void main(String[] args) {
-        DatosAcceso datac = new DatosAcceso();
+        DatosAcceso datac = DatosAcceso.crearInstancia();
         AgentsConnection.connect(datac.getHost(), datac.getPort(), datac.getVirtualHost(), datac.getUsername(), datac.getPassword(), datac.getSSL());
         
         TestAgenteComunicacion bot;
