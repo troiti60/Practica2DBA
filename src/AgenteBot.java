@@ -21,8 +21,8 @@ public class AgenteBot extends SingleAgent{
 
 	private ACLMessage inbox,outbox;
 	private String saludo;
-	private DatosAcceso datac;
-        private JsonDBA parse;
+	private DatosAcceso datac = new DatosAcceso();
+        private JsonDBA parse = new JsonDBA();
 	
         /**
          * Enum de las acciones posibles
@@ -81,13 +81,13 @@ public class AgenteBot extends SingleAgent{
      * @throws InterruptedException 
      */
     public String Saludo() throws InterruptedException{
-		outbox = new ACLMessage();
+        System.out.println("\nSaludo mandado:\n" + saludo);
+        
         outbox.setSender(this.getAid());
         outbox.setReceiver(new AgentID( datac.getVirtualHost() ));
         outbox.setContent(this.saludo);
         this.send(outbox);
         
-        System.out.println("\nSaludo mandado:\n" + saludo);
         System.out.println("\nEsperando recibir mensaje...");
         
         inbox=this.receiveACLMessage();   
@@ -135,32 +135,34 @@ public class AgenteBot extends SingleAgent{
      */
     @Override
     public void execute(){
-	datac = new DatosAcceso();
-        parse = new JsonDBA();
+        boolean vivo = true;
+        boolean keyCorrecto = false;
+        float nivelBateria = 0;
+        float MIN_BATERY = 3;
+        direccion decision;
+        String respuesta;
+
         System.out.println("\n\nSoy agenteBot funcionando");
         
         try {
-            
             System.out.print("\nSaludando...");
             String key = this.Saludo();
             System.out.print("OK\n");
-            
-            boolean vivo = true;
-            boolean keyCorrecto = false;
-            float nivelBateria = 0;
-            float MIN_BATERY = 3;
-            direccion decision;
-            String respuesta;
+        
+            keyCorrecto = !key.contains("BAD_");
             
             if (keyCorrecto){
+                System.out.println("Key correcta");
                 datac.setKey(key);
+                vivo = true;
             }
             else{
+                System.out.println("Key incorrecta");
                 //matar agenteEntorno mesaje
                 vivo = !vivo;
             }
             
-            while(vivo)                                  
+            while(vivo) {                                  
                 //Esperar NvBateria de agente entorno
                 System.out.println("\nEsperando recibir mensaje...");
 
@@ -205,17 +207,16 @@ public class AgenteBot extends SingleAgent{
                 
                 respuesta = this.RealizarAccion(decision);
                 
-                if(respuesta!= "o" || respuesta!="BAD_"){
-                    // Matar agente entorno
+                if(!respuesta.contains("OK")){
+                     // Matar agente entorno
                     vivo = !vivo;
+                    System.out.println("Resultado inesperado\n" + respuesta);
                 }
-               	
-            	
+            } 		
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            System.err.println("\n----ERROR EN BOT----\n" + e.getMessage());
         }
-        
     }
 	
     /**
