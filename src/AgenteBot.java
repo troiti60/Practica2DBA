@@ -160,7 +160,7 @@ public class AgenteBot extends SingleAgent {
         // Enviar mensaje
         ACLMessage outbox = new ACLMessage();
         outbox.setSender(this.getAid());
-        outbox.setReceiver(this.agenteEntorno);
+        outbox.setReceiver(new AgentID(datac.getVirtualHost()));
         outbox.setContent(accion);
         this.send(outbox);
 
@@ -222,17 +222,31 @@ public class AgenteBot extends SingleAgent {
                 nivelBateria = valorResult.getAsFloat();
                 
                 System.out.println("Agente Bot: nivel bateria recibido: "+nivelBateria);
+                if(!mapa.getConectado().containsKey(mapa.getCoord())){
+                     System.err.println("Agente Bot: Error fatal: Nodo actual no añadido al mapa!");
+                     vivo=false;
+                }else{
+                if(mapa.getConectado().get(mapa.getCoord()).getRadar()==2){
+                    System.out.println("--------SOLUCIÓN ALCANZADA!!!!------");
+                    vivo=false;
+                
+                }
+                else{
+                    System.out.println("Solución no alcanzada");
                 
                 // Tomar decisión
                 if (nivelBateria <= MIN_BATERIA) {
                     decision = Accion.R;
                 } else {
                     try {
-                        decision = this.busqueda();
+                        //decision = this.busqueda();
+                        decision = Accion.SO;
                     } catch (Exception ex) {
                         System.err.println("Agente Bot: Búsqueda falló\n" + ex.getMessage());
                         vivo = false;
                     }
+                }
+                }
                 }
                 }
 
