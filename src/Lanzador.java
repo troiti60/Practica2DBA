@@ -12,12 +12,32 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 public class Lanzador {
 
     /**
+     * El mapa a jugar.
+     * 
+     * Se puede eligir entre:
+     *  + plainworld
+     *  + earthquake1
+     *  + earthquake2
+     *  + earthquake3
+     *  + earthquake4
+     *  + largeearthquake1
+     *  + largeearthquake2
+     *  + largeearthquake3
+     *  + indoor1
+     */
+    public static final String world = "plainworld";
+    public static int tamano = 100;
+    
+    /**
      * Método main
      * 
      * @param args 
      * @author Fco Javier Ortega Rodríguez
      */
     public static void main(String[] args) {
+        if (Lanzador.world.contains("large") || 
+            Lanzador.world.contains("indoor")) Lanzador.tamano = 500;
+        
         // Instanciación del agente
         AgenteBot agenteBot;
         AgenteEntorno agenteEntorno;

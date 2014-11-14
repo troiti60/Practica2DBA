@@ -3,6 +3,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.SingleAgent;
 import edu.emory.mathcs.backport.java.util.Collections;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,7 +26,7 @@ public class AgenteBot extends SingleAgent {
     /**
      * Guardar el world
      */
-    private final String world = "plainworld";
+    private final String world;
 
     /**
      * Parser y datos
@@ -52,6 +53,8 @@ public class AgenteBot extends SingleAgent {
         super(aid);
         this.agenteEntorno = agenteEntorno;
 
+        this.world = Lanzador.world;
+        
         this.parse = new JsonDBA();
         this.datac = DatosAcceso.crearInstancia();
         this.mapa = Mapa.crearInstancia();
@@ -316,6 +319,11 @@ public class AgenteBot extends SingleAgent {
         outbox.setReceiver(this.agenteEntorno);
         outbox.setContent("Muere hijofruta!");
         this.send(outbox);
+        
+        // Dibujar mapa
+        try {
+            this.mapa.dibujar();
+        } catch (IOException ex) {}
     }
 
     /**

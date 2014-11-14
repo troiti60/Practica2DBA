@@ -1,5 +1,10 @@
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.imageio.ImageIO;
 
 /**
  * Representa el mapa descubierto por los sensores del bot en forma singleton
@@ -48,6 +53,11 @@ public class Mapa {
      * Coordenadas que ocupa el robot en un instante de tiempo
      */
     private Coord coord;
+    
+    /**
+     * Imagen del mapa
+     */
+    private final BufferedImage imagen;
 
     /**
      * Constructor
@@ -62,6 +72,23 @@ public class Mapa {
         this.conectado = new HashMap<Coord, Nodo>(tamanoInicial);
         this.noConectado = new HashMap<Coord, Nodo>(tamanoInicial);
         this.muros = new HashMap<Coord, Nodo>(tamanoInicial);
+        
+        // Crear imagen
+        this.imagen = new BufferedImage(Lanzador.tamano, Lanzador.tamano, BufferedImage.TYPE_INT_RGB);
+        for (int x = 0; x < Lanzador.tamano; x++)
+            for (int y = 0; y < Lanzador.tamano; y++)
+                this.imagen.setRGB(x, y, Color.GRAY.getRGB());
+    }
+    
+    /**
+     * Guardar el imagen creado en el disco duro
+     * 
+     * @throws IOException 
+     * @author Alexander Straub
+     */
+    public void dibujar() throws IOException {
+        File outputfile = new File(Lanzador.world + ".bmp");
+        ImageIO.write(this.imagen, "bmp", outputfile);
     }
 
     /**
@@ -97,6 +124,7 @@ public class Mapa {
     /**
      * Getter para devolver la coordenada X de la posición del agente
      *
+     * @return Coordenada X
      * @author Antonio Troitiño
      */
     public int getX() {
@@ -106,6 +134,7 @@ public class Mapa {
     /**
      * Getter para devolver la coordenada Y de la posición del agente
      *
+     * @return Coordenada Y
      * @author Antonio Troitiño
      */
     public int getY() {
@@ -126,19 +155,40 @@ public class Mapa {
      * Setter para establecer la nueva posición del robot
      *
      * @param newCoord Coordenadas nuevas del bot
-     * @author Antonio Troitiño
+     * @author Antonio Troitiño y Alexander Straub
      */
     public void setCoord(Coord newCoord) {
         this.coord = newCoord;
+        
+        // Dibujar
+        if (this.imagen.getRGB(newCoord.getX(), newCoord.getY()) != Color.RED.getRGB() && 
+                this.imagen.getRGB(newCoord.getX(), newCoord.getY()) != Color.BLUE.getRGB())
+            this.imagen.setRGB(newCoord.getX(), newCoord.getY(), Color.GREEN.getRGB()); // camino: verde
     }
 
     /**
      * Añadir un nodo nuevo (o decidir si ya lo hay en el grafo)
      *
      * @param nodoNuevo Nodo que será añadido al mapa
-     * @author Antonio Troitiño
+     * @author Antonio Troitiño y Alexander Straub
      */
     public void addNodo(Nodo nodoNuevo) {
+        // Dibujar
+        if (nodoNuevo.getX() >= 0 && nodoNuevo.getY() >= 0 && 
+                nodoNuevo.getX() < Lanzador.tamano && nodoNuevo.getY() < Lanzador.tamano && 
+                (this.imagen.getRGB(nodoNuevo.getX(), nodoNuevo.getY()) == Color.GRAY.getRGB() || 
+                 this.imagen.getRGB(nodoNuevo.getX(), nodoNuevo.getY()) == Color.WHITE.getRGB())) {
+            if (this.conectado.isEmpty()) {
+                this.imagen.setRGB(nodoNuevo.getX(), nodoNuevo.getY(), Color.BLUE.getRGB()); // origin: azul
+            } else if (nodoNuevo.getRadar() == 0) {
+                this.imagen.setRGB(nodoNuevo.getX(), nodoNuevo.getY(), Color.WHITE.getRGB()); // normal: blanco
+            } else if (nodoNuevo.getRadar() == 1) {
+                this.imagen.setRGB(nodoNuevo.getX(), nodoNuevo.getY(), Color.BLACK.getRGB()); // muro: negro
+            } else if (nodoNuevo.getRadar() == 2) {
+                this.imagen.setRGB(nodoNuevo.getX(), nodoNuevo.getY(), Color.RED.getRGB()); // destino: rojo
+            }
+        }
+        
         comprobarVecinos(nodoNuevo);
     }
 

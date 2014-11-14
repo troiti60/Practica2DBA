@@ -33,6 +33,10 @@ public class DatosAcceso {
     private final String username;
     private final String passwd;
     private final Boolean ssl;
+    
+    /**
+     * Nombres de los bots
+     */
     private static final String nombreBotPrincipal = "BotPrincipal";
     private static final String nombreBotEntorno = "BotEntorno";
 
