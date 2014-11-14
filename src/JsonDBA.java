@@ -113,7 +113,7 @@ public class JsonDBA {
     public ArrayList<Float> jsonElementToArrayFloat(JsonElement cadena) {
         //JsonParser parser = new JsonParser();
         ArrayList<Float> arr_float = new ArrayList<>();
-        JsonElement element = parser.parse(cadena.getAsString());
+        JsonElement element = parser.parse(cadena.toString());
         JsonArray jsArray = element.getAsJsonArray();
 
         for (JsonElement jse : jsArray) {
@@ -125,7 +125,7 @@ public class JsonDBA {
     public ArrayList<Integer> jsonElementToArrayInt(JsonElement cadena) {
         //JsonParser parser = new JsonParser();
         ArrayList<Integer> arr_int = new ArrayList<>();
-        JsonElement element = parser.parse(cadena.getAsString());
+        JsonElement element = parser.parse(cadena.toString());
         JsonArray jsArray = element.getAsJsonArray();
 
         for (JsonElement jse : jsArray) {
