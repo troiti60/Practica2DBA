@@ -150,9 +150,9 @@ public class AgenteBot extends SingleAgent {
         lhmap.put("command", "logout");
         lhmap.put("key", this.datac.getKey());
         String despedida = this.parse.crearJson(lhmap);
-        System.out.println("\nAgente Bot: Saludo mandado:\n" + despedida);
+        System.out.println("\nAgente Bot: Despedida mandado:\n" + despedida);
 
-        // Enviar saludo
+        // Enviar despedida
         ACLMessage outbox = new ACLMessage();
         outbox.setSender(this.getAid());
         outbox.setReceiver(new AgentID(this.datac.getVirtualHost()));
