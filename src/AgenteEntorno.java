@@ -84,10 +84,12 @@ public class AgenteEntorno extends SingleAgent {
                     System.err.println("Error al recibir mensaje\n" + ex.getMessage());
                     vivo = false;
                 }
+                System.out.println("Agente Entorno: mensaje recibido "+ json);
 
                 // Si el mensaje recibido es del agente bot hay que terminar
                 if (inbox != null && inbox.getSender() == this.agenteBot) {
                     vivo = false;
+                    System.out.println("Agente Entorno: recibido mensaje de agentebot");
                 } // Recibir los datos del scanner
                 else if (parser.contains(strJson, "scanner")) {
                     result = parser.getElement(json, "scanner");
@@ -97,6 +99,8 @@ public class AgenteEntorno extends SingleAgent {
                 } // Recibir los datos del radar
                 else if (parser.contains(strJson, "radar")) {
                     result = parser.getElement(json, "radar");
+                    System.out.println("Agente Entorno peta aquí");
+
                     this.radar = parser.jsonElementToArrayInt(result);
                     
                     System.out.println("Agente Entorno: Recibido radar: "+this.radar);
