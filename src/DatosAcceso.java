@@ -33,8 +33,8 @@ public class DatosAcceso {
     private final String username;
     private final String passwd;
     private final Boolean ssl;
-    private static final String nombreBotPrincipal = "BotPrincipal2";
-    private static final String nombreBotEntorno = "BotEntorno2";
+    private static final String nombreBotPrincipal = "BotPrincipal";
+    private static final String nombreBotEntorno = "BotEntorno";
 
     /**
      * La clave de la conección
