@@ -114,7 +114,7 @@ public class AgenteBot extends SingleAgent {
         String saludo = this.parse.login(this.world,
                 this.agenteEntorno.getLocalName(), this.agenteEntorno.getLocalName(),
                 this.agenteEntorno.getLocalName(), this.agenteEntorno.getLocalName());
-        System.out.println("\nSaludo mandado:\n" + saludo);
+        System.out.println("\nAgente Bot: Saludo mandado:\n" + saludo);
 
         // Enviar saludo
         ACLMessage outbox = new ACLMessage();
@@ -124,14 +124,14 @@ public class AgenteBot extends SingleAgent {
         outbox.setContent(saludo);
         this.send(outbox);
 
-        System.out.println("\nEsperando recibir mensaje...");
+        System.out.println("\nAgente Bot: Esperando recibir mensaje...");
 
         // Recibir respuesta
         ACLMessage inbox = this.receiveACLMessage();
         JsonElement mensajeRecibido = this.parse.recibirRespuesta(inbox.getContent());
         JsonElement valorResult = this.parse.getElement(mensajeRecibido, "result");
 
-        System.out.println("Mensaje recibido: " + valorResult.getAsString()
+        System.out.println("Agente Bot: Mensaje recibido: " + valorResult.getAsString()
                 + " de " + inbox.getSender().getLocalName());
 
         // Devolver respuesta
@@ -154,7 +154,7 @@ public class AgenteBot extends SingleAgent {
         lhmap.put("key", this.datac.getKey());
         String accion = this.parse.crearJson(lhmap);
 
-        System.out.println("\nAcción mandada:\n" + accion);
+        System.out.println("\nAgente Bot: Acción mandada:\n" + accion);
 
         // Enviar mensaje
         ACLMessage outbox = new ACLMessage();
@@ -163,14 +163,14 @@ public class AgenteBot extends SingleAgent {
         outbox.setContent(accion);
         this.send(outbox);
 
-        System.out.println("\nEsperando recibir mensaje...");
+        System.out.println("\nAgente Bot: Esperando recibir mensaje...");
 
         // Recibir respuesta
         ACLMessage inbox = this.receiveACLMessage();
         JsonElement MensajeRecibido = this.parse.recibirRespuesta(inbox.getContent());
         JsonElement valorResult = this.parse.getElement(MensajeRecibido, "result");
 
-        System.out.println("Mensaje recibido: " + valorResult.getAsString()
+        System.out.println("Agente Bot: Mensaje recibido: " + valorResult.getAsString()
                 + " de " + inbox.getSender().getLocalName());
 
         // Devolver respuesta
@@ -192,29 +192,30 @@ public class AgenteBot extends SingleAgent {
 
         try {
             // Enviar saludo y recibir clave de sesión
-            System.out.print("\nSaludando...");
+            System.out.print("\nAgente Bot: Saludando...");
             String key = this.Saludo();
 
             keyCorrecto = !key.contains("BAD_");
 
             if (keyCorrecto) {
-                System.out.println("Key correcta");
+                System.out.println("Agente Bot: Key correcta");
                 this.datac.setKey(key);
                 vivo = true;
             } else {
-                System.err.println("Key incorrecta");
+                System.err.println("Agente Bot: Key incorrecta");
                 vivo = false;
             }
 
             while (vivo) {
                 //Esperar nivel de batería de agente entorno
-                System.out.println("\nEsperando recibir mensaje...");
+                System.out.println("\n Agente Bot: Esperando recibir mensaje...");
 
                 ACLMessage inbox = this.receiveACLMessage();
                 JsonElement MensajeRecibido = this.parse.recibirRespuesta(inbox.getContent());
                 JsonElement valorResult = this.parse.getElement(MensajeRecibido, "bateria");
                 nivelBateria = valorResult.getAsFloat();
-
+                
+                System.out.println("Agente Bot: nivel bateria recibido: "+nivelBateria);
                 // Tomar decisión
                 Accion decision = null;
                 if (nivelBateria <= MIN_BATERIA) {
@@ -223,7 +224,7 @@ public class AgenteBot extends SingleAgent {
                     try {
                         decision = this.busqueda();
                     } catch (Exception ex) {
-                        System.err.println("Búsqueda falló\n" + ex.getMessage());
+                        System.err.println("Agente Bot: Búsqueda falló\n" + ex.getMessage());
                         vivo = false;
                     }
                 }
@@ -260,19 +261,19 @@ public class AgenteBot extends SingleAgent {
 
                     if (!respuesta.contains("OK")) {
                         vivo = false;
-                        System.err.println("Resultado inesperado\n" + respuesta);
+                        System.err.println("Agente Bot: Resultado inesperado\n" + respuesta);
                     }
                 }
             }
         } catch (InterruptedException e) {
-            System.err.println("\n----ERROR EN BOT----\n" + e.getMessage());
+            System.err.println("\n----ERROR EN BOT PRINCIPAL----\n" + e.getMessage());
         }
 
         // Matar al agente Entorno
         ACLMessage outbox = new ACLMessage();
         outbox.setSender(this.getAid());
         outbox.setReceiver(this.agenteEntorno);
-        outbox.setContent("Muere!");
+        outbox.setContent("Muere hijofruta!");
         this.send(outbox);
     }
 

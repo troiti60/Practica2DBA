@@ -69,7 +69,7 @@ public class AgenteEntorno extends SingleAgent {
 
         while (vivo) {
             ACLMessage inbox = null, outbox = null;
-
+            System.out.println("Agente Entorno: Esperando recibir mensajes del servidor.");
             // Recibir todos los mensajes de los sensores
             for (int i = 0; i < 4 && vivo; i++) {
                 String strJson = null;
@@ -84,22 +84,32 @@ public class AgenteEntorno extends SingleAgent {
                     System.err.println("Error al recibir mensaje\n" + ex.getMessage());
                     vivo = false;
                 }
+                System.out.println("Agente Entorno: mensaje recibido "+ json);
 
                 // Si el mensaje recibido es del agente bot hay que terminar
                 if (inbox != null && inbox.getSender() == this.agenteBot) {
                     vivo = false;
+                    System.out.println("Agente Entorno: recibido mensaje de agentebot");
                 } // Recibir los datos del scanner
                 else if (parser.contains(strJson, "scanner")) {
                     result = parser.getElement(json, "scanner");
                     this.scanner = parser.jsonElementToArrayFloat(result);
+                    
+                    System.out.println("Agente Entorno: Recibido scanner: "+this.scanner);
                 } // Recibir los datos del radar
                 else if (parser.contains(strJson, "radar")) {
                     result = parser.getElement(json, "radar");
+                    System.out.println("Agente Entorno peta aquí");
+
                     this.radar = parser.jsonElementToArrayInt(result);
+                    
+                    System.out.println("Agente Entorno: Recibido radar: "+this.radar);
                 } // Recibir el nivel de la batería
                 else if (parser.contains(strJson, "bateria")) {
                     result = parser.getElement(json, "bateria");
                     this.nivelBateria = result.getAsFloat();
+                    
+                    System.out.println("Agente Entorno: Recibido bateria: "+this.nivelBateria);
                 } // Recibir la posición del bot
                 else if (parser.contains(strJson, "gps")) {
                     result = parser.getElement(json, "gps");
@@ -107,7 +117,10 @@ public class AgenteEntorno extends SingleAgent {
                     this.coord.setX(resultDentro.getAsInt());
                     resultDentro = parser.getElement(result, "y");
                     this.coord.setY(resultDentro.getAsInt());
+                    
+                    System.out.println("Agente Entorno: Recibido gps: "+this.coord.getX() + " " + this.coord.getY());
                 }
+                
             }
 
             if (vivo) {
@@ -184,11 +197,12 @@ public class AgenteEntorno extends SingleAgent {
                 outbox = new ACLMessage();
                 outbox.setSender(this.getAid());
                 outbox.setReceiver(this.agenteBot);
-
+                System.out.println("Agente Entorno: Enviando mensaje a botprincipal");
                 LinkedHashMap lhm = new LinkedHashMap();
                 lhm.put("bateria", this.nivelBateria);
-
+                
                 outbox.setContent(parser.crearJson(lhm));
+                System.out.println("Agente Entorno: Enviado nivel de batería : "+this.nivelBateria);
             }
         }
     }
