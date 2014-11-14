@@ -84,7 +84,7 @@ public class AgenteEntorno extends SingleAgent {
                     System.err.println("Error al recibir mensaje\n" + ex.getMessage());
                     vivo = false;
                 }
-                System.out.println("Agente Entorno: mensaje recibido "+ json);
+                System.out.println("Agente Entorno: mensaje recibido "+ strJson);
 
                 // Si el mensaje recibido es del agente bot hay que terminar
                 if (inbox != null && inbox.getSender() == this.agenteBot) {
@@ -99,14 +99,12 @@ public class AgenteEntorno extends SingleAgent {
                 } // Recibir los datos del radar
                 else if (parser.contains(strJson, "radar")) {
                     result = parser.getElement(json, "radar");
-                    System.out.println("Agente Entorno peta aquí");
-
                     this.radar = parser.jsonElementToArrayInt(result);
                     
                     System.out.println("Agente Entorno: Recibido radar: "+this.radar);
                 } // Recibir el nivel de la batería
-                else if (parser.contains(strJson, "bateria")) {
-                    result = parser.getElement(json, "bateria");
+                else if (parser.contains(strJson, "battery")) {
+                    result = parser.getElement(json, "battery");
                     this.nivelBateria = result.getAsFloat();
                     
                     System.out.println("Agente Entorno: Recibido bateria: "+this.nivelBateria);
@@ -122,11 +120,11 @@ public class AgenteEntorno extends SingleAgent {
                 }
                 
             }
-
+            System.out.println("Agente Entorno: Todos los mensajes recibidos");
             if (vivo) {
                 // Si es la primera ejecución, mandamos la información
                 // de las 25 casillas percibidas
-                if (iter == 0) {
+                if (iter != 0) {
                     // Empezando con el nodo centrico para que sea añadido al grafo conectado
                     this.mapa.addNodo(new Nodo(this.coord.getX(),     this.coord.getY(),     this.radar.get(12), this.scanner.get(12)));
 
@@ -159,7 +157,7 @@ public class AgenteEntorno extends SingleAgent {
                     // En caso de no ser la primera iteración, nos aseguramos de que la 
                     // última acción fuese un movimiento, ya que sino no hay que actualizar
                     // el mapa ya que no habríamos percibido nada nuevo.
-                    // Si nos hemos movido, actualizamos sólo las catorce casillas periféricas
+                    // Si nos hemos movido, actualizamos sólo las dieciséis casillas periféricas
                     
                     /*
                      0   1   2   3   4  
@@ -192,7 +190,7 @@ public class AgenteEntorno extends SingleAgent {
                 this.mapa.setCoord(this.coord);
                 this.lastCoord = this.coord;
                 this.iter++;
-
+                System.out.println("Agente Entorno: Mapa actualizado");
                 // Enviar el nivel de la batería al agente bot
                 outbox = new ACLMessage();
                 outbox.setSender(this.getAid());
@@ -202,6 +200,7 @@ public class AgenteEntorno extends SingleAgent {
                 lhm.put("bateria", this.nivelBateria);
                 
                 outbox.setContent(parser.crearJson(lhm));
+                this.send(outbox);
                 System.out.println("Agente Entorno: Enviado nivel de batería : "+this.nivelBateria);
             }
         }

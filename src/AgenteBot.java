@@ -111,6 +111,7 @@ public class AgenteBot extends SingleAgent {
      */
     public String Saludo() throws InterruptedException {
         // Crear string para saludar al servidor
+        // mundo, radar, scanner, bateria, gps
         String saludo = this.parse.login(this.world,
                 this.agenteEntorno.getLocalName(), this.agenteEntorno.getLocalName(),
                 this.agenteEntorno.getLocalName(), this.agenteEntorno.getLocalName());
@@ -159,7 +160,7 @@ public class AgenteBot extends SingleAgent {
         // Enviar mensaje
         ACLMessage outbox = new ACLMessage();
         outbox.setSender(this.getAid());
-        outbox.setReceiver(this.agenteEntorno);
+        outbox.setReceiver(new AgentID(datac.getVirtualHost()));
         outbox.setContent(accion);
         this.send(outbox);
 
@@ -207,26 +208,46 @@ public class AgenteBot extends SingleAgent {
             }
 
             while (vivo) {
+                Accion decision = null;
                 //Esperar nivel de batería de agente entorno
                 System.out.println("\n Agente Bot: Esperando recibir mensaje...");
 
                 ACLMessage inbox = this.receiveACLMessage();
+                if(inbox.getContent().contains("CRASH")){
+                     vivo=false;
+                     System.out.println("Agente Bot: Fallo Recibido: "+inbox.getContent());
+                }else{
                 JsonElement MensajeRecibido = this.parse.recibirRespuesta(inbox.getContent());
                 JsonElement valorResult = this.parse.getElement(MensajeRecibido, "bateria");
                 nivelBateria = valorResult.getAsFloat();
                 
                 System.out.println("Agente Bot: nivel bateria recibido: "+nivelBateria);
+                if(!mapa.getConectado().containsKey(mapa.getCoord())){
+                     System.err.println("Agente Bot: Error fatal: Nodo actual no añadido al mapa!");
+                     vivo=false;
+                }else{
+                if(mapa.getConectado().get(mapa.getCoord()).getRadar()==2){
+                    System.out.println("--------SOLUCIÓN ALCANZADA!!!!------");
+                    vivo=false;
+                
+                }
+                else{
+                    System.out.println("Solución no alcanzada");
+                
                 // Tomar decisión
-                Accion decision = null;
                 if (nivelBateria <= MIN_BATERIA) {
                     decision = Accion.R;
                 } else {
                     try {
-                        decision = this.busqueda();
+                        //decision = this.busqueda();
+                        decision = Accion.SO;
                     } catch (Exception ex) {
                         System.err.println("Agente Bot: Búsqueda falló\n" + ex.getMessage());
                         vivo = false;
                     }
+                }
+                }
+                }
                 }
 
                 // Alternativamente se puede utilizar la función de búsqueda que
