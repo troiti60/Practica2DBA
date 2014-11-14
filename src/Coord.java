@@ -64,17 +64,6 @@ public class Coord {
         this.x = x;
         this.y = y;
     }
-    
-    /**
-     * Copy constructor
-     *
-     * @param copy Crear nuevas coordenadas de copiando
-     * @author Alexander Straub
-     */
-    public Coord(Coord copy) {
-        this.x = copy.getX();
-        this.y = copy.getY();
-    }
 
     /**
      * Devolver la coordenada en el norte

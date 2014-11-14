@@ -119,44 +119,9 @@ public class AgenteBot extends SingleAgent {
         // Enviar saludo
         ACLMessage outbox = new ACLMessage();
         outbox.setSender(this.getAid());
-        outbox.setReceiver(new AgentID(this.datac.getVirtualHost()));
+        //Alex no toques esta línea que la lías
+        outbox.setReceiver(new AgentID(datac.getVirtualHost()));
         outbox.setContent(saludo);
-        this.send(outbox);
-
-        System.out.println("\nAgente Bot: Esperando recibir mensaje...");
-
-        // Recibir respuesta
-        ACLMessage inbox = this.receiveACLMessage();
-        JsonElement mensajeRecibido = this.parse.recibirRespuesta(inbox.getContent());
-        JsonElement valorResult = this.parse.getElement(mensajeRecibido, "result");
-
-        System.out.println("Agente Bot: Mensaje recibido: " + valorResult.getAsString()
-                + " de " + inbox.getSender().getLocalName());
-
-        // Devolver respuesta
-        return valorResult.getAsString();
-    }
-    
-    /**
-     * Método para deslogearse del servidor
-     * 
-     * @return Respuesta del servidor
-     * @throws InterruptedException 
-     * @author Alexander Straub
-     */
-    public String despedida() throws InterruptedException {
-        // Crear json string para despedirse
-        LinkedHashMap lhmap = new LinkedHashMap();
-        lhmap.put("command", "logout");
-        lhmap.put("key", this.datac.getKey());
-        String despedida = this.parse.crearJson(lhmap);
-        System.out.println("\nAgente Bot: Saludo mandado:\n" + despedida);
-
-        // Enviar saludo
-        ACLMessage outbox = new ACLMessage();
-        outbox.setSender(this.getAid());
-        outbox.setReceiver(new AgentID(this.datac.getVirtualHost()));
-        outbox.setContent(despedida);
         this.send(outbox);
 
         System.out.println("\nAgente Bot: Esperando recibir mensaje...");
@@ -194,7 +159,7 @@ public class AgenteBot extends SingleAgent {
         // Enviar mensaje
         ACLMessage outbox = new ACLMessage();
         outbox.setSender(this.getAid());
-        outbox.setReceiver(new AgentID(this.datac.getVirtualHost()));
+        outbox.setReceiver(this.agenteEntorno);
         outbox.setContent(accion);
         this.send(outbox);
 
@@ -243,7 +208,7 @@ public class AgenteBot extends SingleAgent {
 
             while (vivo) {
                 //Esperar nivel de batería de agente entorno
-                System.out.println("\nAgente Bot: Esperando recibir mensaje...");
+                System.out.println("\n Agente Bot: Esperando recibir mensaje...");
 
                 ACLMessage inbox = this.receiveACLMessage();
                 JsonElement MensajeRecibido = this.parse.recibirRespuesta(inbox.getContent());
@@ -251,15 +216,9 @@ public class AgenteBot extends SingleAgent {
                 nivelBateria = valorResult.getAsFloat();
                 
                 System.out.println("Agente Bot: nivel bateria recibido: "+nivelBateria);
-                
                 // Tomar decisión
                 Accion decision = null;
-                if (this.mapa.getConectado().get(this.mapa.getCoord()).getRadar() == 2) {
-                    // Ya hemos llegado
-                    String respuesta = despedida();
-                    System.out.println("Agente Bot: Llegado al destino\n" + respuesta);
-                    vivo = false;
-                } else if (nivelBateria <= MIN_BATERIA) {
+                if (nivelBateria <= MIN_BATERIA) {
                     decision = Accion.R;
                 } else {
                     try {
