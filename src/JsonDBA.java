@@ -67,12 +67,13 @@ public class JsonDBA {
      * @return
      */
     public JsonElement getElement(JsonElement cadena, String clave) {
-        LinkedHashMap lhashmap;
+        
+        /*LinkedHashMap lhashmap;
         String mensaje = cadena.toString();
         JsonElement element = null;
 
         lhashmap = gson.fromJson(cadena, LinkedHashMap.class);
-
+        
         if (lhashmap.containsKey(clave)) {
             element = parser.parse(mensaje);
             return element.getAsJsonObject().get(clave);
@@ -80,7 +81,21 @@ public class JsonDBA {
             System.out.print("La clave " + clave + " no está en el mensaje");
         }
 
+        return element; */
+        String mensaje = cadena.toString();
+        JsonElement element = null;
+        
+        if(mensaje.contains(clave))
+        {       
+            element = parser.parse(mensaje);
+            return element.getAsJsonObject().get(clave);
+        }
+        else
+            System.out.print("La clave "+clave+ " no está en el mensaje");
+        
         return element;
+        
+        
     }
 
     /**
