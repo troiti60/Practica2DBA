@@ -11,9 +11,6 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 */
 public class Lanzador {
 
-    private static final AgentID IDBot = new AgentID("botPrincipal");
-    private static final AgentID IDEntorno = new AgentID("botEntorno");
-    
     /**
      * Método main
      * 
@@ -27,7 +24,8 @@ public class Lanzador {
         
         // Instanciación de la clase que contiene los datos de acceso
         DatosAcceso datac = DatosAcceso.crearInstancia();
-
+        AgentID IDBot = new AgentID(DatosAcceso.getNombreBotPrincipal());
+        AgentID IDEntorno = new AgentID(DatosAcceso.getNombreBotEntorno());
         // Crear connección al servidor
         System.out.print("Iniciando...\n");
         System.out.print("Conectando... ");
@@ -39,11 +37,11 @@ public class Lanzador {
         try {
             // Crear los agentes
             System.out.print("Inicializando bot principal...");
-            agenteBot = new AgenteBot(Lanzador.IDBot, Lanzador.IDEntorno);
+            agenteBot = new AgenteBot(IDBot,IDEntorno);
             System.out.print("OK\n");
             
             System.out.print("Inicializando bot entorno...");
-            agenteEntorno = new AgenteEntorno(Lanzador.IDEntorno, Lanzador.IDBot);
+            agenteEntorno = new AgenteEntorno(IDEntorno, IDBot);
             System.out.print("OK\n");
 
             // Lanzamiento de las "hebras" de los agentes
