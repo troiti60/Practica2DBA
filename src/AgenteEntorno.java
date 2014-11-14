@@ -23,7 +23,7 @@ public class AgenteEntorno extends SingleAgent {
     private ArrayList<Integer> radar;
     private ArrayList<Float> scanner;
     private float nivelBateria;
-    private final Coord coord;
+    private Coord coord;
     private Coord lastCoord;
 
     /**
@@ -47,7 +47,7 @@ public class AgenteEntorno extends SingleAgent {
         this.radar = new ArrayList<Integer>(25);
         this.scanner = new ArrayList<Float>(25);
         this.nivelBateria = 0.0f;
-        this.coord = new Coord(-1, -1);
+        this.coord = null;
         this.lastCoord = new Coord(-1, -1);
 
         this.iter = 0;
@@ -105,14 +105,15 @@ public class AgenteEntorno extends SingleAgent {
                     
                     System.out.println("Agente Entorno: Recibido radar: "+this.radar);
                 } // Recibir el nivel de la batería
-                else if (parser.contains(strJson, "bateria")) {
-                    result = parser.getElement(json, "bateria");
+                else if (parser.contains(strJson, "battery")) {
+                    result = parser.getElement(json, "battery");
                     this.nivelBateria = result.getAsFloat();
                     
                     System.out.println("Agente Entorno: Recibido bateria: "+this.nivelBateria);
                 } // Recibir la posición del bot
                 else if (parser.contains(strJson, "gps")) {
                     result = parser.getElement(json, "gps");
+                    this.coord = new Coord(0, 0);
                     resultDentro = parser.getElement(result, "x");
                     this.coord.setX(resultDentro.getAsInt());
                     resultDentro = parser.getElement(result, "y");
@@ -202,6 +203,7 @@ public class AgenteEntorno extends SingleAgent {
                 lhm.put("bateria", this.nivelBateria);
                 
                 outbox.setContent(parser.crearJson(lhm));
+                this.send(outbox);
                 System.out.println("Agente Entorno: Enviado nivel de batería : "+this.nivelBateria);
             }
         }
