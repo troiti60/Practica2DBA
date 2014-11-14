@@ -33,6 +33,8 @@ public class DatosAcceso {
     private final String username;
     private final String passwd;
     private final Boolean ssl;
+    private static final String nombreBotPrincipal = "BotPrincipal1";
+    private static final String nombreBotEntorno = "BotEntorno1";
 
     /**
      * La clave de la conección
@@ -53,6 +55,8 @@ public class DatosAcceso {
         this.ssl = false;
 
         this.key = null;
+        
+
     }
 
     /**
@@ -134,4 +138,25 @@ public class DatosAcceso {
     public String getKey() {
         return this.key;
     }
+
+    /**
+     * Getter para devolver el nombre del bot principal
+     *
+     * @return Nombre del servidor
+     * @author Fco Javier Ortega Rodríguez, Antonio Troitiño
+     */
+    public static String getNombreBotPrincipal() {
+        return DatosAcceso.nombreBotPrincipal;
+    }
+
+    /**
+     * Getter para devolver el nombre del bot entorno
+     *
+     * @return Nombre del servidor
+     * @author Fco Javier Ortega Rodríguez, Antonio Troitiño
+     */
+    public static String getNombreBotEntorno() {
+        return DatosAcceso.nombreBotEntorno;
+    }
+    
 }
