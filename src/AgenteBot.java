@@ -111,6 +111,7 @@ public class AgenteBot extends SingleAgent {
      */
     public String Saludo() throws InterruptedException {
         // Crear string para saludar al servidor
+        // mundo, radar, scanner, bateria, gps
         String saludo = this.parse.login(this.world,
                 this.agenteEntorno.getLocalName(), this.agenteEntorno.getLocalName(),
                 this.agenteEntorno.getLocalName(), this.agenteEntorno.getLocalName());
@@ -207,17 +208,22 @@ public class AgenteBot extends SingleAgent {
             }
 
             while (vivo) {
+                Accion decision = null;
                 //Esperar nivel de batería de agente entorno
                 System.out.println("\n Agente Bot: Esperando recibir mensaje...");
 
                 ACLMessage inbox = this.receiveACLMessage();
+                if(inbox.getContent().contains("CRASH")){
+                     vivo=false;
+                     System.out.println("Agente Bot: Fallo Recibido: "+inbox.getContent());
+                }else{
                 JsonElement MensajeRecibido = this.parse.recibirRespuesta(inbox.getContent());
                 JsonElement valorResult = this.parse.getElement(MensajeRecibido, "bateria");
                 nivelBateria = valorResult.getAsFloat();
                 
                 System.out.println("Agente Bot: nivel bateria recibido: "+nivelBateria);
+                
                 // Tomar decisión
-                Accion decision = null;
                 if (nivelBateria <= MIN_BATERIA) {
                     decision = Accion.R;
                 } else {
@@ -227,6 +233,7 @@ public class AgenteBot extends SingleAgent {
                         System.err.println("Agente Bot: Búsqueda falló\n" + ex.getMessage());
                         vivo = false;
                     }
+                }
                 }
 
                 // Alternativamente se puede utilizar la función de búsqueda que
