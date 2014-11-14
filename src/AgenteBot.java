@@ -119,7 +119,8 @@ public class AgenteBot extends SingleAgent {
         // Enviar saludo
         ACLMessage outbox = new ACLMessage();
         outbox.setSender(this.getAid());
-        outbox.setReceiver(this.agenteEntorno);
+        //Alex no toques esta línea que la lías
+        outbox.setReceiver(new AgentID(datac.getVirtualHost()));
         outbox.setContent(saludo);
         this.send(outbox);
 
