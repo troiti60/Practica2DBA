@@ -535,4 +535,325 @@ public class AgenteBot extends SingleAgent {
         return destino != null;
     }
 
+    /**
+    * Triangular objetivo:
+    * @param mapa primera percepcion del mapa
+    * @return una lista de coordenadas con los posibles objetivos
+    * @author Jesús
+    */
+    public Coord triangularObjetivo(List<Nodo> mapa){
+        /* 
+        */
+        Coord objetivo=new Coord(0,0);
+        boolean esEsquina=false;
+        boolean esEsquinaSuperior=false;
+        float numeroDeCasillas;
+        
+        //calculamos la coordenada de la casilla mas cercana
+        Coord casillaMasCercana=calcularCoordenadaMasCercana(mapa);
+        //calculamos el nodo mas cercano al objetivo
+        Nodo nodoMasCercano=calcularNodoMasCercano(mapa);
+        //calculamos la distancia entre casillas adyacentes no diagonales
+        float distanciaCasilla=distanciaCasilla(mapa);
+        //calculamos la distancia entre casillas adyacentes diagonales
+        float distanciaCasillaDiagonal=distanciaCasillaDiagonal(mapa);
+        
+        //calculamos si la casilla mas cercana es una esquina
+        esEsquina=esEsquina(mapa,casillaMasCercana);
+        esEsquinaSuperior=esEsquinaSuperior(mapa,casillaMasCercana);
+                
+        if(esEsquina){
+            if(esEsquinaSuperior){
+                int posicion=calcularPosicionDentroDelMapaMasCercano(mapa);
+                Nodo nodoAuxiliar;
+                
+                if(posicion==0){
+                    nodoAuxiliar=mapa.get(1);
+                }else{
+                    nodoAuxiliar=mapa.get(9);
+                }
+                
+                float angulo=hallarAnguloAlObjetivo(nodoMasCercano.getScanner(),nodoAuxiliar.getScanner(),distanciaCasilla);
+                float pos_i_nodo_cercano=casillaMasCercana.getX()*distanciaCasilla;
+                float pos_j_nodo_cercano=casillaMasCercana.getY()*distanciaCasilla;
+                
+                float pos_i_nodo_auxiliar=nodoAuxiliar.getX()*distanciaCasilla;
+                float pos_j_nodo_auxiliar=nodoAuxiliar.getY()*distanciaCasilla;
+                
+                List<Float> vector;
+                List<Float> vectorRotado;
+                List<Float> vectorRotadoEscalado;
+                vector=hallarVectorEntreDosPuntos(pos_i_nodo_cercano,pos_j_nodo_cercano, pos_i_nodo_auxiliar, pos_j_nodo_auxiliar);
+                vectorRotado=rotarVectorUnAngulo(vector.get(0),vector.get(1),angulo);
+                
+                vectorRotadoEscalado=productoEscalarVector(vectorRotado.get(0), vectorRotado.get(1), nodoMasCercano.getScanner()/distanciaCasilla);
+                objetivo=sacarCoordenadaVector(vectorRotadoEscalado.get(0),vectorRotadoEscalado.get(1), distanciaCasilla);
+            }else{
+                int posicion=calcularPosicionDentroDelMapaMasCercano(mapa);
+                Nodo nodoAuxiliar;
+                
+                if(posicion==20){
+                    nodoAuxiliar=mapa.get(15);
+                }else{
+                    nodoAuxiliar=mapa.get(23);
+                }
+                
+                float angulo=hallarAnguloAlObjetivo(nodoMasCercano.getScanner(),nodoAuxiliar.getScanner(),distanciaCasilla);
+                float pos_i_nodo_cercano=casillaMasCercana.getX()*distanciaCasilla;
+                float pos_j_nodo_cercano=casillaMasCercana.getY()*distanciaCasilla;
+                
+                float pos_i_nodo_auxiliar=nodoAuxiliar.getX()*distanciaCasilla;
+                float pos_j_nodo_auxiliar=nodoAuxiliar.getY()*distanciaCasilla;
+                
+                List<Float> vector;
+                List<Float> vectorRotado;
+                List<Float> vectorRotadoEscalado;
+                vector=hallarVectorEntreDosPuntos(pos_i_nodo_cercano,pos_j_nodo_cercano, pos_i_nodo_auxiliar, pos_j_nodo_auxiliar);
+                vectorRotado=rotarVectorUnAngulo(vector.get(0),vector.get(1),angulo);
+                
+                vectorRotadoEscalado=productoEscalarVector(vectorRotado.get(0), vectorRotado.get(1), nodoMasCercano.getScanner()/distanciaCasilla);
+                objetivo=sacarCoordenadaVector(vectorRotadoEscalado.get(0),vectorRotadoEscalado.get(1), distanciaCasilla);
+            }
+        }else{
+            numeroDeCasillas=nodoMasCercano.getScanner()/distanciaCasilla;
+            if(nodoMasCercano.getCoord()==mapa.get(9).getCoord() || nodoMasCercano.getCoord()==mapa.get(14).getCoord() || nodoMasCercano.getCoord()==mapa.get(19).getCoord()){
+                objetivo.setX((casillaMasCercana.getX()+(int)numeroDeCasillas));
+            }else if(nodoMasCercano.getCoord()==mapa.get(21).getCoord() || nodoMasCercano.getCoord()==mapa.get(22).getCoord() || nodoMasCercano.getCoord()==mapa.get(23).getCoord()){
+                objetivo.setY((casillaMasCercana.getX()+(int)numeroDeCasillas));
+            }else if(nodoMasCercano.getCoord()==mapa.get(5).getCoord() || nodoMasCercano.getCoord()==mapa.get(10).getCoord() || nodoMasCercano.getCoord()==mapa.get(15).getCoord()){
+                objetivo.setX((casillaMasCercana.getX()-(int)numeroDeCasillas));
+            }else if(nodoMasCercano.getCoord()==mapa.get(1).getCoord() || nodoMasCercano.getCoord()==mapa.get(2).getCoord() || nodoMasCercano.getCoord()==mapa.get(3).getCoord()){
+                objetivo.setY((casillaMasCercana.getX()-(int)numeroDeCasillas));
+            }
+        }
+        
+        return objetivo;
+    }
+    /**
+    * calcular coordenada mas cercana:
+    * @param percepcion matriz del scanner
+    * @return la coordenada mas cercana
+    * @author Jesús
+    */
+    public Coord calcularCoordenadaMasCercana(List<Nodo> percepcion){
+        Nodo nodoMasCercano=percepcion.get(0);
+        Coord coordenadaMasCercana;
+        for (Nodo nodo : percepcion) {
+             if(nodoMasCercano.getScanner()>nodo.getScanner()){
+                 nodoMasCercano=nodo;
+             }
+        }
+        coordenadaMasCercana=nodoMasCercano.getCoord();
+        
+        return coordenadaMasCercana;
+    }
+    
+    /**
+    * calcular posicion dentro de la percepcion mas cercana:
+    * @param percepcion matriz del scanner
+    * @return posicion de la casilla mas cercana dentro de la percepcion
+    * @author Jesús
+    */
+    public int calcularPosicionDentroDelMapaMasCercano(List<Nodo> percepcion){
+        Nodo nodoMasCercano=percepcion.get(0);
+        int posicion;
+
+        for (posicion=0; posicion<percepcion.size(); posicion++) {
+             if(nodoMasCercano.getScanner()>percepcion.get(posicion).getScanner()){
+                 nodoMasCercano=percepcion.get(posicion);
+             }
+        }
+        
+        return posicion;
+    }
+    
+    /**
+    * calcular nodo mas cercano:
+    * @param percepcion matriz del scanner
+    * @return el nodo mas cercano al objetivo
+    * @author Jesús
+    */
+    public Nodo calcularNodoMasCercano(List<Nodo> percepcion){
+        Nodo nodoMasCercano=percepcion.get(0);
+
+        for (Nodo nodo : percepcion) {
+             if(nodoMasCercano.getScanner()>nodo.getScanner()){
+                 nodoMasCercano=nodo;
+             }
+        }
+        
+        return nodoMasCercano;
+    }
+    
+    /**
+    * calcular coordenada mas cercana:
+    * @param percepcion matriz del scanner
+    * @return la distancia entre dos casillas adyacentes y no diagonales
+    * @author Jesús
+    */
+    public float distanciaCasilla(List<Nodo> percepcion){
+        float distancia;
+        Nodo nodo_1=percepcion.get(0);
+        Nodo nodo_2=percepcion.get(1);
+        float nodo1=nodo_1.getScanner();
+        float nodo2=nodo_2.getScanner();
+        
+        distancia=nodo1-nodo2;
+        if(distancia<0){
+            distancia=distancia*(-1);
+        }
+        
+        return distancia;
+    }
+    
+    /**
+    * calcular coordenada mas cercana:
+    * @param percepcion matriz del scanner
+    * @return la distancia entre dos casillas adyacentes que sean diagonales
+    * @author Jesús
+    */
+    public float distanciaCasillaDiagonal(List<Nodo> percepcion){
+        float distanciaDiagonal;
+        Nodo nodo_1=percepcion.get(0);
+        Nodo nodo_2=percepcion.get(6);
+        float nodo1=nodo_1.getScanner();
+        float nodo2=nodo_2.getScanner();
+        
+        distanciaDiagonal=nodo1-nodo2;
+        if(distanciaDiagonal<0){
+            distanciaDiagonal=distanciaDiagonal*(-1);
+        }
+        
+        return distanciaDiagonal;
+    }
+    /**
+    * calcular si una coordenada es una esquina:
+    * @param percepcion matriz del scanner
+     * @param c
+    * @return si es esquina o no de la matriz percepcion
+    * @author Jesús
+    */
+    public boolean esEsquina(List<Nodo> percepcion, Coord c){
+        boolean esEsquina=false;
+
+        if(c==percepcion.get(0).getCoord()){
+            esEsquina=true;
+            
+        }else if(c==percepcion.get(4).getCoord()){
+            esEsquina=true;
+            
+        }else if(c==percepcion.get(20).getCoord()){
+            esEsquina=true;
+            
+        }else if(c==percepcion.get(24).getCoord()){
+            esEsquina=true;
+            
+        }
+        
+        return esEsquina;
+    }
+    
+    /**
+    * calcular si una coordenada es una esquina superior:
+    * @param percepcion matriz del scanner
+     * @param c
+    * @return si es esquina o no de la matriz percepcion
+    * @author Jesús
+    */
+    public boolean esEsquinaSuperior(List<Nodo> percepcion, Coord c){
+        boolean esEsquinaSuperior=false;
+        
+        if(c==percepcion.get(0).getCoord()){
+            esEsquinaSuperior=true;
+            
+        }else if(c==percepcion.get(4).getCoord()){
+            esEsquinaSuperior=true; 
+        }
+        return esEsquinaSuperior;
+    }
+    /**
+    * hallar el angulo de dos puntos hacia el objetivo para hallar la direccion:
+    * @param distancia_A distancia al obejtivo
+    * @param distancia_B dsitancia al objetivo
+    * @param distancia_entre_los_puntos A y B
+    * @return el angulo hacia el objetivo
+    * @author Jesús
+    */
+    public float hallarAnguloAlObjetivo(float distancia_A, float distancia_B, float distancia_entre_los_puntos){
+        double angulo=0;
+        angulo=Math.acos(-((Math.pow(distancia_A, 2)-Math.pow(distancia_B, 2)-Math.pow(distancia_entre_los_puntos, 2))/(2*distancia_entre_los_puntos*distancia_A)));
+        
+        float ret=(float)angulo;
+        return ret;
+    }
+    /**
+    * hallar el angulo de dos puntos hacia el objetivo para hallar la direccion:
+    * @param pos_i_pA posicion i del punto A
+    * @param pos_j_pA posicion j del punto A
+    * @param pos_i_pB posicion i del punto B
+    * @param pos_j_pB posicion j del punto B
+    * @return vector entre dos puntos, List(0) ->pos i, List(1) -> pos j
+    * @author Jesús
+    */
+    public List<Float> hallarVectorEntreDosPuntos(float pos_i_pA, float pos_j_pA, float pos_i_pB, float pos_j_pB){
+        List<Float> vector=new ArrayList();
+        vector.add(pos_i_pB-pos_i_pA);
+        vector.add(pos_j_pB-pos_j_pA);
+        
+        return vector;
+    }
+    
+    /**
+    * rotar un vector un angulo dado antihorario:
+    * @param pos_i posicion i del vector
+    * @param pos_j posicion j del vector
+    * @param angulo angulo a rotar antihorario
+    * @return vector rotado
+    * @author Jesús
+    */
+    public List<Float> rotarVectorUnAngulo(float pos_i, float pos_j, float angulo){
+        List<Float> vector=new ArrayList();
+        float i=(float)((double)pos_i*Math.cos(angulo)-(double)pos_j*Math.sin(angulo));
+        float j=(float)((double)pos_i*Math.sin(angulo)+(double)pos_j*Math.cos(angulo));
+        
+        vector.add(i);
+        vector.add(j);
+        
+        return vector;
+    }
+    
+    /**
+    * rotar un vector un angulo dado antihorario:
+    * @param pos_i posicion i del vector
+    * @param pos_j posicion j del vector
+    * @param k constante a multiplicar
+    * @return vector escalado
+    * @author Jesús
+    */
+    public List<Float> productoEscalarVector(float pos_i, float pos_j, float k){
+        List<Float> vector=new ArrayList();
+        float i=pos_i*k;
+        float j=pos_j*k;
+        
+        vector.add(i);
+        vector.add(j);
+        
+        return vector;
+    }
+    /**
+    * rotar un vector un angulo dado antihorario:
+    * @param pos_i posicion i del vector
+    * @param pos_j posicion j del vector
+     * @param distancia_entre_dos_puntos --
+    * @return coordenadas del mapa
+    * @author Jesús
+    */
+    public Coord sacarCoordenadaVector(float pos_i, float pos_j, float distancia_entre_dos_puntos){
+        int coordenada_x=(int)(pos_i/distancia_entre_dos_puntos);
+        int coordenada_y=(int)(pos_j/distancia_entre_dos_puntos);
+        
+        Coord c=new Coord(coordenada_x,coordenada_y);
+        
+        return c;
+    }
 }
