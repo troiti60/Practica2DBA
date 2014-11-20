@@ -41,7 +41,7 @@ public class DatosAcceso {
     private static final String nombreBotEntorno = "BotEntorno";
 
     /**
-     * La clave de la conección
+     * La clave de la conexión //Corregido por Dani
      */
     private String key;
 
@@ -96,7 +96,7 @@ public class DatosAcceso {
     /**
      * Getter para devolver el nombre para logearse
      *
-     * @return Nombre para logearse
+     * @return Nombre para loguearse
      * @author Fco Javier Ortega Rodríguez
      */
     public String getUsername() {
