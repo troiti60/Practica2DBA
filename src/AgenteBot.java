@@ -543,6 +543,14 @@ public class AgenteBot extends SingleAgent {
     */
     public Coord triangularObjetivo(List<Nodo> mapa){
         /* 
+        1. Si es esquina:
+            1- Calculamos el angulo hacia el objetivo
+            2- Sacamos un vector director entre dos puntos conocidos
+            3- Rotamos ese vector por su angulo en direccion antihoraria
+            4- Escalamos el vector hasta el objetivo
+            5- Sacamos su coordenada
+        2. Si no es esquina:
+            1- Sacamos su coordenada directamente
         */
         Coord objetivo=new Coord(0,0);
         boolean esEsquina=false;
