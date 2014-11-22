@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
- * Clase para parsear y crear strings de Json
+ * Clase para parsear y crear strings de JSON
  *
- * @author JotaC
+ * @author José Carlos Alfaro
  */
 public class JsonDBA {
 
@@ -67,21 +67,7 @@ public class JsonDBA {
      * @return
      */
     public JsonElement getElement(JsonElement cadena, String clave) {
-        
-        /*LinkedHashMap lhashmap;
-        String mensaje = cadena.toString();
-        JsonElement element = null;
 
-        lhashmap = gson.fromJson(cadena, LinkedHashMap.class);
-        
-        if (lhashmap.containsKey(clave)) {
-            element = parser.parse(mensaje);
-            return element.getAsJsonObject().get(clave);
-        } else {
-            System.out.print("La clave " + clave + " no está en el mensaje");
-        }
-
-        return element; */
         String mensaje = cadena.toString();
         JsonElement element = null;
         
@@ -99,9 +85,9 @@ public class JsonDBA {
     }
 
     /**
-     *
+     * Parsea el string de respuesta del servidor a JsonElement 
      * @param result
-     * @return
+     * @return JsonElement con el mensaje 
      */
     public JsonElement recibirRespuesta(String result) {
         return parser.parse(result);
@@ -110,6 +96,12 @@ public class JsonDBA {
     //**************************************************************************************************//
     //*******************************   FUNCIONES AUXILIARES *******************************************//
     //**************************************************************************************************//
+    
+    /**
+     * Transforma un elemento JsonELement con una colección de float en un Array de float.
+     * @param cadena: contiene la cadena de float
+     * @return Array de float
+     */
     public ArrayList<Float> jsonElementToArrayFloat(JsonElement cadena) {
         //JsonParser parser = new JsonParser();
         ArrayList<Float> arr_float = new ArrayList<>();
@@ -121,7 +113,12 @@ public class JsonDBA {
         }
         return arr_float;
     }
-
+    
+    /**
+     * Transforma un elemento JsonELement con una colección de enteros en un Array de enteros.
+     * @param cadena: contiene la cadena de enteros
+     * @return Array de enteros
+     */
     public ArrayList<Integer> jsonElementToArrayInt(JsonElement cadena) {
         //JsonParser parser = new JsonParser();
         ArrayList<Integer> arr_int = new ArrayList<>();
@@ -132,9 +129,5 @@ public class JsonDBA {
             arr_int.add(jse.getAsInt());
         }
         return arr_int;
-    }
-
-    public boolean contains(String cadena, String key) {
-        return cadena.contains(key);
     }
 }

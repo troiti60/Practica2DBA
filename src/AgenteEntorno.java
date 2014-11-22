@@ -91,13 +91,13 @@ public class AgenteEntorno extends SingleAgent {
                     vivo = false;
                     System.out.println("Agente Entorno: recibido mensaje de agentebot");
                 } // Recibir los datos del scanner
-                else if (parser.contains(strJson, "scanner")) {
+                else if (strJson.contains("scanner")) {
                     result = parser.getElement(json, "scanner");
                     this.scanner = parser.jsonElementToArrayFloat(result);
                     
                     System.out.println("Agente Entorno: Recibido scanner: "+this.scanner);
                 } // Recibir los datos del radar
-                else if (parser.contains(strJson, "radar")) {
+                else if (strJson.contains("radar")) {
                     result = parser.getElement(json, "radar");
                     System.out.println("Agente Entorno peta aquí");
 
@@ -105,13 +105,13 @@ public class AgenteEntorno extends SingleAgent {
                     
                     System.out.println("Agente Entorno: Recibido radar: "+this.radar);
                 } // Recibir el nivel de la batería
-                else if (parser.contains(strJson, "battery")) {
+                else if (strJson.contains("battery")) {
                     result = parser.getElement(json, "battery");
                     this.nivelBateria = result.getAsFloat();
                     
                     System.out.println("Agente Entorno: Recibido bateria: "+this.nivelBateria);
                 } // Recibir la posición del bot
-                else if (parser.contains(strJson, "gps")) {
+                else if (strJson.contains("gps")) {
                     result = parser.getElement(json, "gps");
                     this.coord = new Coord(0, 0);
                     resultDentro = parser.getElement(result, "x");
