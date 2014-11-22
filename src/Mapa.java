@@ -150,7 +150,33 @@ public class Mapa {
     public Coord getCoord() {
         return this.coord;
     }
-
+    
+    /**
+     * Getter para devolver los 25 nodos captados por AgenteEntorno
+     * en la última iteración
+     * 
+     * @return ArrayList con los 25 nodos de la última percepción
+     * @author Antonio Troitiño del Río
+     */
+    public ArrayList<Nodo> getLastPerception(){
+        ArrayList<Nodo> resultado = new ArrayList<Nodo>(25);
+        Coord aux;
+        for(int y=-2;y<3;y++){
+            for(int x=-2;x<3;x++){
+                aux=new Coord(coord.getX()+x,coord.getY()+y);
+                if(conectado.containsKey(aux))
+                    resultado.add(conectado.get(aux));
+                else if(noConectado.containsKey(aux))
+                    resultado.add(noConectado.get(aux));
+                else if(muros.containsKey(aux))
+                    resultado.add(muros.get(aux));
+            
+            }
+        }
+        
+        
+        return resultado;
+    }
     /**
      * Setter para establecer la nueva posición del robot
      *
