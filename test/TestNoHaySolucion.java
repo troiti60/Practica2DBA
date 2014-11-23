@@ -54,14 +54,14 @@ public class TestNoHaySolucion {
                 miMapa.addNodo(new Nodo(3, 4, 1, 10));
                 break;
             case 1:
-                // No alcazable 2,2
+                // No alcazable 5,5
                 /*
                     x   x   x   x   x   x   x
                     x   0   0   0   x   0   x
-                    x   0   D   0   x   0   x
+                    x   0   0   0   x   0   x
                     x   0   0   0   x   0   x
                     x   x   x   x   x   0   x
-                    x   0   0   0   0   0   x
+                    x   0   0   0   0   D   x
                     x   x   x   x   x   x   x
                 */
                 miMapa.addNodo(new Nodo(0, 0, 1, 10));
@@ -109,7 +109,7 @@ public class TestNoHaySolucion {
                 miMapa.addNodo(new Nodo(2, 5, 0, 10));
                 miMapa.addNodo(new Nodo(3, 5, 0, 10));
                 miMapa.addNodo(new Nodo(4, 5, 0, 10));
-                miMapa.addNodo(new Nodo(5, 5, 0, 10));
+                miMapa.addNodo(new Nodo(5, 5, 2, 10));
                 miMapa.addNodo(new Nodo(6, 5, 1, 10));
                 
                 miMapa.addNodo(new Nodo(0, 6, 1, 10));
@@ -403,44 +403,40 @@ public class TestNoHaySolucion {
      * @return Coordenada de la direccion
      */
     public Coord getAdyacente(Coord coordenada, int direccion){
-        Coord miCoordenada = new Coord(coordenada.getX(), coordenada.getY());
+        Coord miCoordenada = new Coord(-1, -1);
         
         switch(direccion){
             case 0:
                 System.out.print("NW ");
-                miCoordenada.setX( coordenada.getX()-1 );
-                miCoordenada.setY( coordenada.getY()-1 );
+                miCoordenada = coordenada.NO();
                 break;
             case 1:
                 System.out.print("N ");
-                miCoordenada.setY( coordenada.getY()-1 );
+                miCoordenada = coordenada.N();
                 break;
             case 2:
                 System.out.print("NE ");
-                miCoordenada.setX( coordenada.getX()-1 );
-                miCoordenada.setY( coordenada.getY()+1 );
+                miCoordenada = coordenada.NE();
                 break;
             case 3:
                 System.out.print("W ");
-                miCoordenada.setX( miCoordenada.getX()-1 );
+                miCoordenada = coordenada.O();
                 break;
             case 4:
                 System.out.print("E ");
-                miCoordenada.setX( miCoordenada.getX()+1 );
+                miCoordenada = coordenada.E();
                 break;
             case 5:
                 System.out.print("SW ");
-                miCoordenada.setX( miCoordenada.getX()-1 );
-                miCoordenada.setY( miCoordenada.getY()+1 );
+                miCoordenada = coordenada.SE();
                 break;
             case 6:
                 System.out.print("S ");
-                miCoordenada.setY( miCoordenada.getY()+1 );
+                miCoordenada = coordenada.S();
                 break;
             case 7:
                 System.out.print("SE ");
-                miCoordenada.setX( miCoordenada.getX()+1 );
-                miCoordenada.setX( miCoordenada.getX()+1 );
+                miCoordenada = coordenada.SE();
                 break;
         }
         
@@ -479,31 +475,38 @@ public class TestNoHaySolucion {
             
             System.out.println("\nExpandiendo: (" + aux.getX() + "," + aux.getY() + ")");
             
-            for(int i=0; i<8; i++){
-                actual = getAdyacente(aux, i);
-                System.out.println("Actual (" + actual.getX() + "," + actual.getY() + ")");
-                
-                if(miMapa.getConectado().containsKey( actual )){
-                    System.out.println("Solución alcanzable");
-                    return true;
-                }
-                else{
-                    System.out.println("La coordenada (" + actual.getX() + "," + actual.getY() + ") no estaba conectada");
-                    
-                    if(!miMapa.getMuros().containsKey( actual ) && !cerrados.contains( actual )){
-                            System.out.println("La coordenada (" + actual.getX() + "," + actual.getY() + ") estaba sin explorar");
-                            
-                            if(actual.getX()>=0 && actual.getY()>=0){
-                                System.out.println("añadia a abiertos");
-                                abiertos.add( actual );
-                            }else{
-                                System.out.println("fuera del mapa");
-                            }
+            if( !miMapa.getMuros().containsKey(aux)){
+                for(int i=0; i<8; i++){
+                    actual = getAdyacente(aux, i);
+                    System.out.println("Actual (" + actual.getX() + "," + actual.getY() + ")");
+
+                    if(miMapa.getConectado().containsKey( actual )){
+                        System.out.println("Solución alcanzable");
+                        return true;
+                    }
+                    else{
+                        System.out.println("La coordenada (" + actual.getX() + "," + actual.getY() + ") no estaba conectada");
+
+                        if(!cerrados.contains( actual )){
+                                System.out.println("La coordenada (" + actual.getX() + "," + actual.getY() + ") estaba sin explorar");
+
+                                if(!miMapa.getMuros().containsKey( actual )){
+                                    if(actual.getX()>=0 && actual.getY()>=0){
+                                        System.out.println("añadia a abiertos");
+                                        abiertos.add( actual );
+                                    }else{
+                                        System.out.println("fuera del mapa");
+                                    }
+                                }
+                                else
+                                    System.out.println("era muro, no añado");
+                        }
                     }
                 }
             }
-        }
-        
+            else
+                System.out.println("Es un muro, así que no expando");
+        }   
         return solucion;
     }
     
@@ -517,10 +520,16 @@ public class TestNoHaySolucion {
             System.out.println("----->Imposible");
         
         
-        System.out.println("\n------------\nMapa 1 sin solución\n---------");
+        System.out.println("\n------------\nMapa 1 con solucion en 2,2\n---------");
         TestNoHaySolucion test1 = new TestNoHaySolucion(1);
         
         if( test1.puedeExistirSolucion(new Coord(2,2)))
+            System.out.println("----->Podria ser alzable");
+        else
+            System.out.println("----->Imposible");
+        
+        System.out.println("\n------------\nMapa 1 sin solucion en 5,5\n---------");
+        if( test1.puedeExistirSolucion(new Coord(5,5)))
             System.out.println("----->Podria ser alzable");
         else
             System.out.println("----->Imposible");
