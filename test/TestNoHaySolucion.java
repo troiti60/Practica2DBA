@@ -120,63 +120,6 @@ public class TestNoHaySolucion {
                 miMapa.addNodo(new Nodo(5, 6, 1, 10));
                 miMapa.addNodo(new Nodo(6, 6, 1, 10));
                 break;
-            case 2:
-                /*
-                    x   x   x   x   x   x   x   x
-                    x   ?   ?   x   ?   ?   ?   x
-                    x   ?   ?   x   ?   D   ?   x
-                    x   ?   ?   x   ?   ?   ?   x
-                    x   x   x   x   x   x   x   x
-                */
-                
-      
-                
-                
-                break;
-            case 3:
-                // No alcanzable
-                /*
-                    x   x   x   x   x
-                    x   0   x   D   x
-                    x   0   x   x   x
-                    x   0   0   0   x
-                    x   x   x   x   x
-                */
-
-                // Primera fila
-                miMapa.addNodo(new Nodo(0, 0, 1, 10));
-                miMapa.addNodo(new Nodo(1, 0, 1, 10));
-                miMapa.addNodo(new Nodo(2, 0, 1, 10));
-                miMapa.addNodo(new Nodo(3, 0, 1, 10));
-                miMapa.addNodo(new Nodo(4, 0, 1, 10));
-                
-                miMapa.addNodo(new Nodo(0, 1, 1, 10));
-                miMapa.addNodo(new Nodo(1, 1, 0, 10));
-                miMapa.addNodo(new Nodo(2, 1, 1, 10));
-                miMapa.addNodo(new Nodo(3, 1, 2, 10));
-                miMapa.addNodo(new Nodo(4, 1, 1, 10));
-                
-                miMapa.addNodo(new Nodo(0, 2, 1, 10));
-                miMapa.addNodo(new Nodo(1, 2, 0, 10));
-                miMapa.addNodo(new Nodo(2, 2, 1, 10));
-                miMapa.addNodo(new Nodo(3, 2, 1, 10));
-                miMapa.addNodo(new Nodo(4, 2, 1, 10));
-                
-                miMapa.addNodo(new Nodo(0, 3, 1, 10));
-                miMapa.addNodo(new Nodo(1, 3, 0, 10));
-                miMapa.addNodo(new Nodo(2, 3, 0, 10));
-                miMapa.addNodo(new Nodo(3, 3, 0, 10));
-                miMapa.addNodo(new Nodo(4, 3, 1, 10));
-
-                // ultima fila
-                miMapa.addNodo(new Nodo(0, 4, 1, 10));
-                miMapa.addNodo(new Nodo(1, 4, 1, 10));
-                miMapa.addNodo(new Nodo(2, 4, 1, 10));
-                miMapa.addNodo(new Nodo(3, 4, 1, 10));
-                miMapa.addNodo(new Nodo(4, 4, 1, 10));
-                
-                
-                break;
         }
     }
     
@@ -534,14 +477,5 @@ public class TestNoHaySolucion {
         else
             System.out.println("----->Imposible");
         
-        
-        
-        System.out.println("\n------------\nMapa 3 sin solución\n---------");
-        TestNoHaySolucion test3 = new TestNoHaySolucion(3);
-        
-        if( test3.puedeExistirSolucion(new Coord(3,1)))
-            System.out.println("----->Podria ser alzable");
-        else
-            System.out.println("----->Imposible");
     }
 }
