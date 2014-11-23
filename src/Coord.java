@@ -1,10 +1,11 @@
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
+import java.util.Vector;
 
 /**
  * Representa coordenadas en 2D
  *
- * @author Alexander Straub
+ * @author Alexander Straub, Antonio Troitiño
  */
 public class Coord {
 
@@ -64,7 +65,7 @@ public class Coord {
         this.x = x;
         this.y = y;
     }
-    
+
     /**
      * Copy constructor
      *
@@ -233,6 +234,40 @@ public class Coord {
     @Override
     public int hashCode() {
         return (this.x + (this.y * 1000));
+    }
+
+    /**
+     * Sustracción de dos coordenadas
+     *
+     * @param otro Otros coordenadas
+     * @return Vector
+     * @author Alexander Straub
+     */
+    public Vector sub(Coord otro) {
+        int deltaX = this.x - otro.getX();
+        int deltaY = this.y - otro.getY();
+        double norm = Math.sqrt((double) (deltaX * deltaX + deltaY * deltaY));
+        double scale = 0.5 / norm;
+
+        Vector vec = new Vector(2);
+        vec.add((double) deltaX * scale);
+        vec.add((double) deltaY * scale);
+
+        return vec;
+    }
+
+    /**
+     * Adición con un vector
+     *
+     * @param vec Vector
+     * @return Suma
+     * @author Alexander Straub
+     */
+    public Coord add(Vector vec) {
+        int newX = (int) Math.round((double) this.x + (double) vec.get(0));
+        int newY = (int) Math.round((double) this.y + (double) vec.get(1));
+
+        return new Coord(newX, newY);
     }
 
 }

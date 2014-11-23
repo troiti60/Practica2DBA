@@ -4,32 +4,32 @@ import java.util.ArrayList;
 /**
  * Clase nodo que representa un nodo del mapa
  *
- * @author Antonio y Alexander Straub
+ * @author Antonio Troitiño, Alexander Straub
  */
 public class Nodo implements Comparable<Nodo> {
 
     // Coordenadas que ocupa el nodo
     private final Coord coord;
-    
+
     // Indica si está conectado al nodo que ocupa el bot principal
     private boolean conectado = false;
-    
-    // Valor de radar del nodo: 0=libre 1=muro 2=objetivo
-    private final int radar;
-    
+
+    // Valor de radar del nodo: 0=libre 1=muro 2=objetivo 3=malaArea
+    private int radar;
+
     // Distancia euclídea del nodo al objetivo
     private final float scanner;
-    
+
     // Array de nodos (no muros) adyacentes
-    private final ArrayList<Nodo> adyacentes = new ArrayList<Nodo>();
-    
+    private final ArrayList<Nodo> adyacentes = new ArrayList<>();
+
     // Array de muros adyacentes al nodo
-    private final ArrayList<Nodo> murosAdyacentes = new ArrayList<Nodo>();
-    
+    private final ArrayList<Nodo> murosAdyacentes = new ArrayList<>();
+
     // Explorado es la suma de los tamaños de adyacentes y murosAdyacentes.
     // Si vale 8, se toma el nodo como explorado
     private int explorado;
-    
+
     // Indica si el nodo ya era visitado
     private boolean visitado = false;
 
@@ -76,7 +76,7 @@ public class Nodo implements Comparable<Nodo> {
      * @author Antonio Troitiño
      */
     public boolean explored() {
-        return this.radar != 1 && this.explorado == 8;
+        return this.radar != 1 && this.radar != 3 && this.explorado == 8;
     }
 
     /**
@@ -105,13 +105,29 @@ public class Nodo implements Comparable<Nodo> {
      * @author Antonio Troitiño
      */
     public void add(Nodo unNodo) {
-        if (unNodo.getRadar() != 1) {
+        if (unNodo.getRadar() != 1 && unNodo.getRadar() != 3) {
             this.adyacentes.add(unNodo);
             this.explorado++;
         } else {
             this.explorado++;
             this.murosAdyacentes.add(unNodo);
         }
+    }
+
+    /**
+     * Borrar un nodo adyacente del arrayList correspondiente
+     *
+     * @param unNodo Nodo que hay que borrar de las listas
+     * @author Alexander Straub
+     */
+    public void remove(Nodo unNodo) {
+        if (unNodo.getRadar() != 1 && unNodo.getRadar() != 3) {
+            this.adyacentes.remove(unNodo);
+        } else {
+            this.murosAdyacentes.remove(unNodo);
+        }
+
+        this.explorado--;
     }
 
     /**
@@ -142,6 +158,16 @@ public class Nodo implements Comparable<Nodo> {
      */
     public int getRadar() {
         return this.radar;
+    }
+
+    /**
+     * Guardar un nuevo valor del radar
+     *
+     * @param nuevo Nuevo valor del radar
+     * @author Alexander Straub
+     */
+    public void setRadar(int nuevo) {
+        this.radar = nuevo;
     }
 
     /**
@@ -208,7 +234,7 @@ public class Nodo implements Comparable<Nodo> {
      * Devolver la coordenada en el norte
      *
      * @return Coordenada en el norte
-     * @author Alexander Straub,Antonio Troitiño
+     * @author Alexander Straub, Antonio Troitiño
      */
     public Coord N() {
         return new Coord(this.coord.getX(), this.coord.getY() - 1);
@@ -360,7 +386,7 @@ public class Nodo implements Comparable<Nodo> {
     }
 
     /**
-     * Devolver la distancia entre dos nodos que son vecinos !! Si no son
+     * Devolver la distancia entre dos nodos que son vecinos ¡¡ Si no son
      * vecinos, devuelve un valor falso !!
      *
      * @param otro Nodo con que comparar
@@ -368,11 +394,17 @@ public class Nodo implements Comparable<Nodo> {
      * @author Alexander Straub
      */
     public double distanciaA(Nodo otro) {
+        // Para que no siga caminos largos y malos
+        // Este valor viene de muchas pruebas con valores diferentes en los
+        // cuales este valor era mejor
+        double dist = 0.5;
+
         if (otro.getCoord().getX() != this.coord.getX()
                 && otro.getCoord().getY() != this.coord.getY()) {
-            return sqrt(2.0);
+            dist = sqrt(2) * dist;
         }
-        return 1.0;
+
+        return dist;
     }
 
 }

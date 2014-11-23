@@ -15,6 +15,11 @@ public class JsonDBA {
     private final Gson gson;
     private final JsonParser parser;
 
+    /**
+     * Constructor
+     *
+     * @author José Carlos Alfaro
+     */
     public JsonDBA() {
         this.gson = new Gson();
         this.parser = new JsonParser();
@@ -32,6 +37,7 @@ public class JsonDBA {
      * @param battery Nombre del agente Battery
      * @param gps Nombre del agente GPS
      * @return Devuelve el string de logeo
+     * @author José Carlos Alfaro
      */
     public String login(String world, String radar, String scanner, String battery, String gps) {
         LinkedHashMap hash = new LinkedHashMap();
@@ -49,8 +55,9 @@ public class JsonDBA {
     /**
      * Funcion que te serializa una coleccion de datos a formato JSON
      *
-     * @param coleccion
+     * @param coleccion Colección de parejas key-value
      * @return Devuelve un String con el texto en formato JSON
+     * @author José Carlos Alfaro
      */
     public String crearJson(LinkedHashMap coleccion) {
         return gson.toJson(coleccion);
@@ -64,30 +71,29 @@ public class JsonDBA {
      *
      * @param cadena Contiene un elemento json Clave: Valor
      * @param clave Key por la que se accedera
-     * @return
+     * @return Elemento json, indicado por la cadena
+     * @author José Carlos Alfaro
      */
     public JsonElement getElement(JsonElement cadena, String clave) {
-
         String mensaje = cadena.toString();
         JsonElement element = null;
-        
-        if(mensaje.contains(clave))
-        {       
+
+        if (mensaje.contains(clave)) {
             element = parser.parse(mensaje);
             return element.getAsJsonObject().get(clave);
+        } else {
+            System.out.print("La clave " + clave + " no está en el mensaje");
         }
-        else
-            System.out.print("La clave "+clave+ " no está en el mensaje");
-        
+
         return element;
-        
-        
     }
 
     /**
-     * Parsea el string de respuesta del servidor a JsonElement 
-     * @param result
-     * @return JsonElement con el mensaje 
+     * Parsea el string de respuesta del servidor a JsonElement
+     *
+     * @param result String recibido del servidor
+     * @return JsonElement con el mensaje
+     * @author José Carlos Alfaro
      */
     public JsonElement recibirRespuesta(String result) {
         return parser.parse(result);
@@ -96,14 +102,15 @@ public class JsonDBA {
     //**************************************************************************************************//
     //*******************************   FUNCIONES AUXILIARES *******************************************//
     //**************************************************************************************************//
-    
     /**
-     * Transforma un elemento JsonELement con una colección de float en un Array de float.
-     * @param cadena: contiene la cadena de float
+     * Transforma un elemento JsonELement con una colección de float en un Array
+     * de float
+     *
+     * @param cadena Contiene la cadena de float
      * @return Array de float
+     * @author José Carlos Alfaro
      */
     public ArrayList<Float> jsonElementToArrayFloat(JsonElement cadena) {
-        //JsonParser parser = new JsonParser();
         ArrayList<Float> arr_float = new ArrayList<>();
         JsonElement element = parser.parse(cadena.toString());
         JsonArray jsArray = element.getAsJsonArray();
@@ -113,14 +120,16 @@ public class JsonDBA {
         }
         return arr_float;
     }
-    
+
     /**
-     * Transforma un elemento JsonELement con una colección de enteros en un Array de enteros.
-     * @param cadena: contiene la cadena de enteros
+     * Transforma un elemento JsonELement con una colección de enteros en un
+     * Array de enteros
+     *
+     * @param cadena Contiene la cadena de enteros
      * @return Array de enteros
+     * @author José Carlos Alfaro
      */
     public ArrayList<Integer> jsonElementToArrayInt(JsonElement cadena) {
-        //JsonParser parser = new JsonParser();
         ArrayList<Integer> arr_int = new ArrayList<>();
         JsonElement element = parser.parse(cadena.toString());
         JsonArray jsArray = element.getAsJsonArray();

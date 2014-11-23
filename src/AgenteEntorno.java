@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 /**
  * Clase Agente Entorno encargado de recoger la información de los sensores
  *
- * @author Antonio Troitiño y Jose Carlos Alfaro
+ * @author Antonio Troitiño, Jose Carlos Alfaro, Alexander Straub
  */
 public class AgenteEntorno extends SingleAgent {
 
@@ -38,14 +38,14 @@ public class AgenteEntorno extends SingleAgent {
      * @param aid ID del agente
      * @param agenteBot ID del agente principal necesario para comunicarse
      * @throws Exception Avisar, si no pudo iniciarse
-     * @author
+     * @author FALTA NOMBRE DEL AUTOR
      */
     public AgenteEntorno(AgentID aid, AgentID agenteBot) throws Exception {
         super(aid);
         this.agenteBot = agenteBot;
 
-        this.radar = new ArrayList<Integer>(25);
-        this.scanner = new ArrayList<Float>(25);
+        this.radar = new ArrayList<>(25);
+        this.scanner = new ArrayList<>(25);
         this.nivelBateria = 0.0f;
         this.coord = null;
         this.lastCoord = new Coord(-1, -1);
@@ -57,7 +57,7 @@ public class AgenteEntorno extends SingleAgent {
     /**
      * Funcion de ejecución del bot AgenteEntorno
      *
-     * @author Antonio Troitiño y Jose Carlos Alfaro
+     * @author Antonio Troitiño, Jose Carlos Alfaro, Alexander Straub
      */
     @Override
     public void execute() {
@@ -68,12 +68,12 @@ public class AgenteEntorno extends SingleAgent {
         boolean vivo = true;
 
         while (vivo) {
-            ACLMessage inbox = null, outbox = null;
+            ACLMessage inbox = null, outbox;
             System.out.println("Agente Entorno: Esperando recibir mensajes del servidor.");
             // Recibir todos los mensajes de los sensores
             for (int i = 0; i < 4 && vivo; i++) {
                 String strJson = null;
-                JsonElement json = null, result = null, resultDentro = null;
+                JsonElement json = null, result, resultDentro;
 
                 // Recibir mensaje
                 try {
@@ -91,27 +91,25 @@ public class AgenteEntorno extends SingleAgent {
                     vivo = false;
                     System.out.println("Agente Entorno: recibido mensaje de agentebot");
                 } // Recibir los datos del scanner
-                else if (strJson.contains("scanner")) {
+                else if (strJson != null && strJson.contains("scanner")) {
                     result = parser.getElement(json, "scanner");
                     this.scanner = parser.jsonElementToArrayFloat(result);
                     
                     System.out.println("Agente Entorno: Recibido scanner: "+this.scanner);
                 } // Recibir los datos del radar
-                else if (strJson.contains("radar")) {
+                else if (strJson != null && strJson.contains("radar")) {
                     result = parser.getElement(json, "radar");
-                    System.out.println("Agente Entorno peta aquí");
-
                     this.radar = parser.jsonElementToArrayInt(result);
                     
                     System.out.println("Agente Entorno: Recibido radar: "+this.radar);
                 } // Recibir el nivel de la batería
-                else if (strJson.contains("battery")) {
+                else if (strJson != null && strJson.contains("battery")) {
                     result = parser.getElement(json, "battery");
                     this.nivelBateria = result.getAsFloat();
                     
                     System.out.println("Agente Entorno: Recibido bateria: "+this.nivelBateria);
                 } // Recibir la posición del bot
-                else if (strJson.contains("gps")) {
+                else if (strJson != null && strJson.contains("gps")) {
                     result = parser.getElement(json, "gps");
                     this.coord = new Coord(0, 0);
                     resultDentro = parser.getElement(result, "x");
@@ -127,7 +125,7 @@ public class AgenteEntorno extends SingleAgent {
             if (vivo) {
                 // Si es la primera ejecución, mandamos la información
                 // de las 25 casillas percibidas
-                if (iter == 0) {
+                if (this.iter == 0) {
                     // Empezando con el nodo centrico para que sea añadido al grafo conectado
                     this.mapa.addNodo(new Nodo(this.coord.getX(),     this.coord.getY(),     this.radar.get(12), this.scanner.get(12)));
 
@@ -170,22 +168,115 @@ public class AgenteEntorno extends SingleAgent {
                      20  21  22  23  24
                      */
                     
-                    this.mapa.addNodo(new Nodo(this.coord.getX() - 2, this.coord.getY() - 2, this.radar.get(0),  this.scanner.get(0)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() - 1, this.coord.getY() - 2, this.radar.get(1),  this.scanner.get(1)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX(),     this.coord.getY() - 2, this.radar.get(2),  this.scanner.get(2)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() + 1, this.coord.getY() - 2, this.radar.get(3),  this.scanner.get(3)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() + 2, this.coord.getY() - 2, this.radar.get(4),  this.scanner.get(4)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() - 2, this.coord.getY() - 1, this.radar.get(5),  this.scanner.get(5)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() + 2, this.coord.getY() - 1, this.radar.get(9),  this.scanner.get(9)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() - 2, this.coord.getY(),     this.radar.get(10), this.scanner.get(10)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() + 2, this.coord.getY(),     this.radar.get(14), this.scanner.get(14)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() - 2, this.coord.getY() + 1, this.radar.get(15), this.scanner.get(15)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() + 2, this.coord.getY() + 1, this.radar.get(19), this.scanner.get(19)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() - 2, this.coord.getY() + 2, this.radar.get(20), this.scanner.get(20)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() - 1, this.coord.getY() + 2, this.radar.get(21), this.scanner.get(21)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX(),     this.coord.getY() + 2, this.radar.get(22), this.scanner.get(22)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() + 1, this.coord.getY() + 2, this.radar.get(23), this.scanner.get(23)));
-                    this.mapa.addNodo(new Nodo(this.coord.getX() + 2, this.coord.getY() + 2, this.radar.get(24), this.scanner.get(24)));
+                    // Si hay muros, borrar área mala en el entorno del bot
+                    boolean force = false;
+                    for (int i = 0; i < 24; i++)
+                        force = force || this.radar.get(i) == 1;
+                    
+                    this.mapa.addNodo(new Nodo(this.coord.getX() - 2, this.coord.getY() - 2, this.radar.get(0),  this.scanner.get(0)),  force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() - 1, this.coord.getY() - 2, this.radar.get(1),  this.scanner.get(1)),  force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX(),     this.coord.getY() - 2, this.radar.get(2),  this.scanner.get(2)),  force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() + 1, this.coord.getY() - 2, this.radar.get(3),  this.scanner.get(3)),  force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() + 2, this.coord.getY() - 2, this.radar.get(4),  this.scanner.get(4)),  force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() - 2, this.coord.getY() - 1, this.radar.get(5),  this.scanner.get(5)),  force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() + 2, this.coord.getY() - 1, this.radar.get(9),  this.scanner.get(9)),  force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() - 2, this.coord.getY(),     this.radar.get(10), this.scanner.get(10)), force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() + 2, this.coord.getY(),     this.radar.get(14), this.scanner.get(14)), force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() - 2, this.coord.getY() + 1, this.radar.get(15), this.scanner.get(15)), force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() + 2, this.coord.getY() + 1, this.radar.get(19), this.scanner.get(19)), force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() - 2, this.coord.getY() + 2, this.radar.get(20), this.scanner.get(20)), force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() - 1, this.coord.getY() + 2, this.radar.get(21), this.scanner.get(21)), force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX(),     this.coord.getY() + 2, this.radar.get(22), this.scanner.get(22)), force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() + 1, this.coord.getY() + 2, this.radar.get(23), this.scanner.get(23)), force);
+                    this.mapa.addNodo(new Nodo(this.coord.getX() + 2, this.coord.getY() + 2, this.radar.get(24), this.scanner.get(24)), force);
+                    
+                    // Si hay muros encontrados por los sensores, borrar área mala en dirección del movimiento
+                    if (force) {
+                        if (this.lastCoord.getX() == this.coord.getX()) {
+                            if (this.lastCoord.getY() > this.coord.getY()) { // N
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 2, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 1, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX(),     this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 1, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 2, this.coord.getY() - 3));
+                            } else { // S
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 2, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 1, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX(),     this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 1, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 2, this.coord.getY() + 3));
+                            }
+                        }
+                        if (this.lastCoord.getY() == this.coord.getY()) {
+                            if (this.lastCoord.getX() > this.coord.getX()) { // O
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() - 2));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() - 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY()));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() + 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() + 2));
+                            } else { // E
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() - 2));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() - 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY()));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() + 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() + 2));
+                            }
+                        }
+                        if (this.lastCoord.getX() > this.coord.getX()) {
+                            if (this.lastCoord.getY() > this.coord.getY()) { // NO
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 2, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 1, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX(),     this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 1, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 2, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() - 2));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() - 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY()));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() + 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() + 2));
+                            } else { // SO
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() - 2));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() - 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY()));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() + 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() + 2));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 3, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 2, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 1, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX(),     this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 1, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 2, this.coord.getY() + 3));
+                            }
+                        }
+                        if (this.lastCoord.getX() < this.coord.getX()) {
+                            if (this.lastCoord.getY() > this.coord.getY()) { // NE
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 2, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 1, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX(),     this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 1, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 2, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() - 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() - 2));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() - 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY()));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() + 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() + 2));
+                            } else { // SE
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 2, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() - 1, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX(),     this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 1, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 2, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() + 3));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() + 2));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() + 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY()));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() - 1));
+                                this.mapa.removeNodo(new Coord(this.coord.getX() + 3, this.coord.getY() - 2));
+                            }
+                        }
+                    }
                 }
 
                 // Una vez el mapa está actualizado, actualizamos la posición

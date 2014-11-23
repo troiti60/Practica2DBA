@@ -3,17 +3,14 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 /**
  * Clase principal que gestiona el lanzamiento y control de los agentes
- *  Modificaciones: 20-10-14 13:30 Javier Ortega Estructura y Bot
- *  Modificaciones: 06-11-14 13:00 Javier Ortega Mapa y agente Entorno
- * 
- * @author Fco Javier Ortega Rodríguez
- * 
-*/
+ *
+ * @author Javier Ortega Rodríguez
+ */
 public class Lanzador {
 
     /**
-     * El mapa a jugar.
-     * 
+     * El mapa a "jugar".
+     *
      * Se puede eligir entre:
      *  + plainworld
      *  + earthquake1
@@ -25,27 +22,33 @@ public class Lanzador {
      *  + largeearthquake3
      *  + indoor1
      */
-    public static final String world = "plainworld";
+    public static final String world = "largeearthquake2";
     public static int tamano = 100;
-    
+
     /**
      * Método main
-     * 
-     * @param args 
-     * @author Fco Javier Ortega Rodríguez
+     *
+     * @param args Parametros (no utilizados)
+     * @author Javier Ortega Rodríguez
      */
     public static void main(String[] args) {
-        if (Lanzador.world.contains("large") || 
-            Lanzador.world.contains("indoor")) Lanzador.tamano = 500;
-        
+        // Guardar tamaño del mapa para dibujar las imagenes del mundo
+        // (Solamente se usa este variable para crear imagenes, no tiene nada
+        // que ver con la búsqueda del camino)
+        if (Lanzador.world.contains("large")
+                || Lanzador.world.contains("indoor")) {
+            Lanzador.tamano = 500;
+        }
+
         // Instanciación del agente
         AgenteBot agenteBot;
         AgenteEntorno agenteEntorno;
-        
+
         // Instanciación de la clase que contiene los datos de acceso
         DatosAcceso datac = DatosAcceso.crearInstancia();
         AgentID IDBot = new AgentID(DatosAcceso.getNombreBotPrincipal());
         AgentID IDEntorno = new AgentID(DatosAcceso.getNombreBotEntorno());
+
         // Crear connección al servidor
         System.out.print("Iniciando...\n");
         System.out.print("Conectando... ");
@@ -57,9 +60,9 @@ public class Lanzador {
         try {
             // Crear los agentes
             System.out.print("Inicializando bot principal...");
-            agenteBot = new AgenteBot(IDBot,IDEntorno);
+            agenteBot = new AgenteBot(IDBot, IDEntorno);
             System.out.print("OK\n");
-            
+
             System.out.print("Inicializando bot entorno...");
             agenteEntorno = new AgenteEntorno(IDEntorno, IDBot);
             System.out.print("OK\n");

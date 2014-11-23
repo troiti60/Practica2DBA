@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import javax.imageio.ImageIO;
 
 /**
@@ -11,7 +12,7 @@ import javax.imageio.ImageIO;
  * para que sea posible acceserlo del agente recibiendo informaciones nuevas de
  * los sensores, tanto como del agente que ejecutará la método de búsqueda
  *
- * @author Alexander Straub
+ * @author Alexander Straub, Antonio Troitiño
  */
 public class Mapa {
 
@@ -32,22 +33,18 @@ public class Mapa {
         }
         return Mapa.instancia;
     }
-    /**
-     * Coordenadas del objetivo obtenidas mediante triangulación
-     */
-    private Coord objT=null;
 
     /**
      * Mapa representando el grafo de nodos conectado con la posición del agente
      */
     private final HashMap<Coord, Nodo> conectado;
-    
+
     /**
      * Nodos en un grafo del mapa ya descubierto pero (aún) no conectado con el
      * nodo donde se encuentra el agente
      */
     private final HashMap<Coord, Nodo> noConectado;
-    
+
     /**
      * Mapa de Muros descubiertos
      */
@@ -57,7 +54,17 @@ public class Mapa {
      * Coordenadas que ocupa el robot en un instante de tiempo
      */
     private Coord coord;
-    
+
+    /**
+     * Coordenadas del objetivo obtenidas mediante triangulación
+     */
+    private Coord destino;
+
+    /**
+     * Indicar si el objetivo está en la lista de nodos conectados
+     */
+    private boolean objetivoATiro;
+
     /**
      * Imagen del mapa
      */
@@ -69,29 +76,46 @@ public class Mapa {
      * @author Alexander Straub, Antonio Troitiño
      */
     private Mapa() {
-		// Iniciando con tamaño de 10 000 para que no haga falta cambiarlo
+        // Iniciando con tamaño de 10 000 para que no haga falta cambiarlo
         //  muchas vezes y así llevando a ser más eficiente en cuanto a velocidad
         final int tamanoInicial = 10000;
 
-        this.conectado = new HashMap<Coord, Nodo>(tamanoInicial);
-        this.noConectado = new HashMap<Coord, Nodo>(tamanoInicial);
-        this.muros = new HashMap<Coord, Nodo>(tamanoInicial);
-        
+        this.conectado = new HashMap<>(tamanoInicial);
+        this.noConectado = new HashMap<>(tamanoInicial);
+        this.muros = new HashMap<>(tamanoInicial);
+
+        this.destino = null;
+        this.objetivoATiro = false;
+
         // Crear imagen
         this.imagen = new BufferedImage(Lanzador.tamano, Lanzador.tamano, BufferedImage.TYPE_INT_RGB);
-        for (int x = 0; x < Lanzador.tamano; x++)
-            for (int y = 0; y < Lanzador.tamano; y++)
+        for (int x = 0; x < Lanzador.tamano; x++) {
+            for (int y = 0; y < Lanzador.tamano; y++) {
                 this.imagen.setRGB(x, y, Color.GRAY.getRGB());
+            }
+        }
     }
-    
+
     /**
      * Guardar el imagen creado en el disco duro
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      * @author Alexander Straub
      */
     public void dibujar() throws IOException {
         File outputfile = new File(Lanzador.world + ".bmp");
+        ImageIO.write(this.imagen, "bmp", outputfile);
+    }
+
+    /**
+     * Guardar el imagen creado en el disco duro
+     *
+     * @param iteracion Número de iteración
+     * @throws IOException
+     * @author Alexander Straub
+     */
+    public void dibujar(int iteracion) throws IOException {
+        File outputfile = new File(Lanzador.world + "_" + iteracion + ".bmp");
         ImageIO.write(this.imagen, "bmp", outputfile);
     }
 
@@ -144,22 +168,25 @@ public class Mapa {
     public int getY() {
         return this.coord.getY();
     }
-   /**
+
+    /**
      * Getter para devolver las coordenadas del objetivo
      *
      * @return Coordenadas del objetivo
      * @author Antonio Troitiño
      */
     public Coord getObjetivoTriangulado() {
-        return this.objT;
+        return this.destino;
     }
-   /**
+
+    /**
      * Setter para guardar las coordenadas del objetivo
+     *
      * @param obj1 Coordenadas del objetivo obtenidas por triangulación
      * @author Antonio Troitiño
      */
     public void setObjetivoTriangulado(Coord obj1) {
-        this.objT=obj1;
+        this.destino = obj1;
     }
 
     /**
@@ -171,46 +198,121 @@ public class Mapa {
     public Coord getCoord() {
         return this.coord;
     }
-    
+
     /**
-     * Getter para devolver los 25 nodos captados por AgenteEntorno
-     * en la última iteración
-     * 
+     * Getter para devolver los 25 nodos captados por AgenteEntorno en la última
+     * iteración
+     *
      * @return ArrayList con los 25 nodos de la última percepción
-     * @author Antonio Troitiño del Río
+     * @author Antonio Troitiño
      */
-    public ArrayList<Nodo> getLastPerception(){
-        ArrayList<Nodo> resultado = new ArrayList<Nodo>(25);
+    public ArrayList<Nodo> getLastPerception() {
+        ArrayList<Nodo> resultado = new ArrayList<>(25);
         Coord aux;
-        for(int y=-2;y<3;y++){
-            for(int x=-2;x<3;x++){
-                aux=new Coord(coord.getX()+x,coord.getY()+y);
-                if(conectado.containsKey(aux))
+        for (int y = -2; y < 3; y++) {
+            for (int x = -2; x < 3; x++) {
+                aux = new Coord(coord.getX() + x, coord.getY() + y);
+                if (conectado.containsKey(aux)) {
                     resultado.add(conectado.get(aux));
-                else if(noConectado.containsKey(aux))
+                } else if (noConectado.containsKey(aux)) {
                     resultado.add(noConectado.get(aux));
-                else if(muros.containsKey(aux))
+                } else if (muros.containsKey(aux)) {
                     resultado.add(muros.get(aux));
-            
+                }
             }
         }
-        
-        
+
         return resultado;
     }
+
     /**
      * Setter para establecer la nueva posición del robot
      *
      * @param newCoord Coordenadas nuevas del bot
-     * @author Antonio Troitiño y Alexander Straub
+     * @author Antonio Troitiño, Alexander Straub
      */
     public void setCoord(Coord newCoord) {
         this.coord = newCoord;
-        
+        this.conectado.get(this.coord).setVisitado();
+
         // Dibujar
-        if (this.imagen.getRGB(newCoord.getX(), newCoord.getY()) != Color.RED.getRGB() && 
-                this.imagen.getRGB(newCoord.getX(), newCoord.getY()) != Color.BLUE.getRGB())
+        if (this.imagen.getRGB(newCoord.getX(), newCoord.getY()) != Color.RED.getRGB()
+                && this.imagen.getRGB(newCoord.getX(), newCoord.getY()) != Color.BLUE.getRGB()) {
             this.imagen.setRGB(newCoord.getX(), newCoord.getY(), Color.GREEN.getRGB()); // camino: verde
+        }
+    }
+
+    /**
+     * Indicar si el objetivo está en la lista de nodos conectados
+     *
+     * @return True si el destino está en la lista de nodos conectados
+     * @author Alexander Straub
+     */
+    public boolean isObjetivoATiro() {
+        return this.objetivoATiro;
+    }
+
+    /**
+     * Añadir un nodo nuevo (o decidir si ya lo hay en el grafo)
+     *
+     * @param nodoNuevo Nodo que será añadido al mapa
+     * @param force True? Reemplazar nodos si es necesario
+     * @author Alexander Straub
+     */
+    public void addNodo(Nodo nodoNuevo, boolean force) {
+        if (force) {
+            Nodo nodoViejo = this.muros.get(nodoNuevo.getCoord());
+            if (nodoViejo != null) {
+                removeAreaMala(nodoViejo);
+            }
+        }
+
+        this.addNodo(nodoNuevo);
+    }
+
+    /**
+     * Borrar un nodo de la lista de muros
+     *
+     * @param coordsViejo Coordenadas del nodo que borrar
+     * @author Alexander Straub
+     */
+    public void removeNodo(Coord coordsViejo) {
+        Nodo nodoViejo = this.muros.get(coordsViejo);
+        if (nodoViejo != null) {
+            removeAreaMala(nodoViejo);
+        }
+    }
+
+    /**
+     * Borrar un nodo de la lista de muros
+     *
+     * @param nodoViejo Nodo que borrar
+     * @author Alexander Straub
+     */
+    public void removeAreaMala(Nodo nodoViejo) {
+        // Si el nodo viejo es parte del área mala, borrarlo
+        if (this.muros.containsKey(nodoViejo.getCoord())
+                && this.muros.get(nodoViejo.getCoord()).getRadar() == 3) {
+
+            // Borrar de la lista
+            this.muros.remove(nodoViejo.getCoord());
+
+            // Borrar de nodos adyacentes
+            for (Iterator<Nodo> it = nodoViejo.getAdy().iterator(); it.hasNext();) {
+                it.next().remove(nodoViejo);
+            }
+
+            // y de nodos muros adyacentes
+            for (Iterator<Nodo> it = nodoViejo.getMuros().iterator(); it.hasNext();) {
+                it.next().remove(nodoViejo);
+            }
+
+            nodoViejo.getAdy().clear();
+            nodoViejo.getMuros().clear();
+
+            // Dibujar como area aún no descubierto
+            this.imagen.setRGB(nodoViejo.getX(), nodoViejo.getY(), Color.GRAY.getRGB());
+        }
     }
 
     /**
@@ -220,11 +322,17 @@ public class Mapa {
      * @author Antonio Troitiño y Alexander Straub
      */
     public void addNodo(Nodo nodoNuevo) {
+        if (this.conectado.containsKey(nodoNuevo.getCoord())
+                || this.noConectado.containsKey(nodoNuevo.getCoord())
+                || this.muros.containsKey(nodoNuevo.getCoord())) {
+            return;
+        }
+
         // Dibujar
-        if (nodoNuevo.getX() >= 0 && nodoNuevo.getY() >= 0 && 
-                nodoNuevo.getX() < Lanzador.tamano && nodoNuevo.getY() < Lanzador.tamano && 
-                (this.imagen.getRGB(nodoNuevo.getX(), nodoNuevo.getY()) == Color.GRAY.getRGB() || 
-                 this.imagen.getRGB(nodoNuevo.getX(), nodoNuevo.getY()) == Color.WHITE.getRGB())) {
+        if (nodoNuevo.getX() >= 0 && nodoNuevo.getY() >= 0
+                && nodoNuevo.getX() < Lanzador.tamano && nodoNuevo.getY() < Lanzador.tamano
+                && (this.imagen.getRGB(nodoNuevo.getX(), nodoNuevo.getY()) == Color.GRAY.getRGB()
+                || this.imagen.getRGB(nodoNuevo.getX(), nodoNuevo.getY()) == Color.WHITE.getRGB())) {
             if (this.conectado.isEmpty()) {
                 this.imagen.setRGB(nodoNuevo.getX(), nodoNuevo.getY(), Color.BLUE.getRGB()); // origin: azul
             } else if (nodoNuevo.getRadar() == 0) {
@@ -233,9 +341,11 @@ public class Mapa {
                 this.imagen.setRGB(nodoNuevo.getX(), nodoNuevo.getY(), Color.BLACK.getRGB()); // muro: negro
             } else if (nodoNuevo.getRadar() == 2) {
                 this.imagen.setRGB(nodoNuevo.getX(), nodoNuevo.getY(), Color.RED.getRGB()); // destino: rojo
+            } else if (nodoNuevo.getRadar() == 3) {
+                this.imagen.setRGB(nodoNuevo.getX(), nodoNuevo.getY(), Color.ORANGE.getRGB()); // malaArea: naranja
             }
         }
-        
+
         comprobarVecinos(nodoNuevo);
     }
 
@@ -246,7 +356,7 @@ public class Mapa {
      * @author Antonio Troitiño, Alexander Straub
      */
     private void adyacentes(Nodo nodoNuevo) {
-        Nodo aux = null;
+        Nodo aux;
 
         if (this.conectado.containsKey(nodoNuevo.getCoord().NO())) {
             aux = this.conectado.get(nodoNuevo.getCoord().NO());
@@ -389,6 +499,11 @@ public class Mapa {
             this.conectado.put(clave, nodoNuevo);
             nodoNuevo.setConectado(true);
 
+            if (nodoNuevo.getRadar() == 2) {
+                this.objetivoATiro = true;
+                this.destino = nodoNuevo.getCoord();
+            }
+
             //y actualizamos su vector de nodos adyacentes
             //(puede ser que ya ha sido añadido un muro)
             adyacentes(nodoNuevo);
@@ -396,7 +511,7 @@ public class Mapa {
 
         //Si es un nodo que no ha sido añadido aún y no es un muro, lo procesamos
         if (!this.conectado.containsKey(clave) && !this.noConectado.containsKey(clave)
-                && nodoNuevo.getRadar() != 1) {
+                && nodoNuevo.getRadar() != 1 && nodoNuevo.getRadar() != 3) {
             //Si tiene algún adyacente en conectado, lo añadimos a conectado
             if (this.conectado.containsKey(nodoNuevo.NO())
                     || this.conectado.containsKey(nodoNuevo.N())
@@ -410,10 +525,15 @@ public class Mapa {
                 this.conectado.put(clave, nodoNuevo);
                 nodoNuevo.setConectado(true);
 
+                if (nodoNuevo.getRadar() == 2) {
+                    this.objetivoATiro = true;
+                    this.destino = nodoNuevo.getCoord();
+                }
+
                 //y actualizamos su vector de nodos adyacentes
                 adyacentes(nodoNuevo);
 
-                    //Si, además de ser un nodo conectado, tiene algún adyacente en
+                //Si, además de ser un nodo conectado, tiene algún adyacente en
                 //noconectado, tendremos que llamar a mudarListaNodos para que
                 //se encargue de añadirlos a todos a conectado
                 if (this.noConectado.containsKey(nodoNuevo.NO())
@@ -428,13 +548,13 @@ public class Mapa {
                     mudarListaNodos(nodoNuevo);
                 }
             } else {
-                    //Si, por el contrario, no tiene ningún adyacente en conectado
+                //Si, por el contrario, no tiene ningún adyacente en conectado
                 //lo añadimos a noConectado
                 this.noConectado.put(clave, nodoNuevo);
                 nodoNuevo.setConectado(false);
                 adyacentes(nodoNuevo);
             }
-        } else if (nodoNuevo.getRadar() == 1) {
+        } else if (nodoNuevo.getRadar() == 1 || nodoNuevo.getRadar() == 3) {
             if (!muros.containsKey(nodoNuevo.getCoord())) {
                 muros.put(nodoNuevo.getCoord(), nodoNuevo);
                 adyacentes(nodoNuevo);
@@ -453,12 +573,16 @@ public class Mapa {
     private void mudarListaNodos(Nodo nodoAnadido) {
         ArrayList<Nodo> ady = nodoAnadido.getAdy();
         Nodo aux;
-        
+
         for (int i = 0; i < ady.size(); i++) {
             aux = ady.get(i);
             if (aux.getConectado() == false) {
                 aux.setConectado(true);
                 this.conectado.put(aux.getCoord(), aux);
+                if (aux.getRadar() == 2) {
+                    this.objetivoATiro = true;
+                    this.destino = aux.getCoord();
+                }
                 this.noConectado.remove(aux.getCoord());
                 mudarListaNodos(aux);
             }
