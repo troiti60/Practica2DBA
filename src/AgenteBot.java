@@ -643,53 +643,64 @@ public class AgenteBot extends SingleAgent {
      * @return false si es imposible llegar al destino, true cualquier otro caso
      * @author Javier Ortega Rodríguez
      */
-    private boolean puedeExistirSolucion(Coord destino) {
+    public boolean puedeExistirSolucion(Coord destino){
         ArrayList<Coord> abiertos = new ArrayList<>();
         ArrayList<Coord> cerrados = new ArrayList<>();
         Coord aux, actual;
         boolean solucion = false;
-
+        
         cerrados.add(destino);
-
-        //System.out.println("Destino: (" + destino.getX() + "," + destino.getY() + ")");
-        //System.out.print("Hijos generados: ");
-        for (int i = 0; i < 8; i++) {
+        
+        System.out.println("Destino: (" + destino.getX() + "," + destino.getY() + ")");
+        System.out.print("Hijos generados: ");
+        
+        for(int i=0; i<8; i++){
             aux = getAdyacente(destino, i);
-            abiertos.add(aux);
-            //System.out.print("(" + aux.getX() + "," + aux.getY() + ") ");
+            abiertos.add( aux );
+            System.out.print("(" + aux.getX() + "," + aux.getY() + ") ");
         }
-
-        //System.out.print("\n");
-        while (abiertos.size() > 0) {
+        
+        System.out.print("\n");
+        
+        while(abiertos.size()>0){
             aux = abiertos.get(0);
             cerrados.add(aux);
             abiertos.remove(0);
+            
+            System.out.println("\nExpandiendo: (" + aux.getX() + "," + aux.getY() + ")");
+            
+            if( !mapa.getMuros().containsKey(aux)){
+                for(int i=0; i<8; i++){
+                    actual = getAdyacente(aux, i);
+                    System.out.println("Actual (" + actual.getX() + "," + actual.getY() + ")");
 
-            //System.out.println("\nExpandiendo: (" + aux.getX() + "," + aux.getY() + ")");
-            for (int i = 0; i < 8; i++) {
-                actual = getAdyacente(aux, i);
-                //System.out.println("Actual (" + actual.getX() + "," + actual.getY() + ")");
+                    if(mapa.getConectado().containsKey( actual )){
+                        System.out.println("Solución alcanzable");
+                        return true;
+                    }
+                    else{
+                        System.out.println("La coordenada (" + actual.getX() + "," + actual.getY() + ") no estaba conectada");
 
-                if (mapa.getConectado().containsKey(actual)) {
-                    //System.out.println("Solución alcanzable");
-                    return true;
-                } else {
-                    //System.out.println("La coordenada (" + actual.getX() + "," + actual.getY() + ") no estaba conectada");
+                        if(!cerrados.contains( actual )){
+                                System.out.println("La coordenada (" + actual.getX() + "," + actual.getY() + ") estaba sin explorar");
 
-                    if (!mapa.getMuros().containsKey(actual) && !cerrados.contains(actual)) {
-                            //System.out.println("La coordenada (" + actual.getX() + "," + actual.getY() + ") estaba sin explorar");
-
-                        if (actual.getX() >= 0 && actual.getY() >= 0) {
-                            //System.out.println("añadia a abiertos");
-                            abiertos.add(actual);
-                        } else {
-                            //System.out.println("fuera del mapa");
+                                if(!mapa.getMuros().containsKey( actual )){
+                                    if(actual.getX()>=0 && actual.getY()>=0){
+                                        System.out.println("añadia a abiertos");
+                                        abiertos.add( actual );
+                                    }else{
+                                        System.out.println("fuera del mapa");
+                                    }
+                                }
+                                else
+                                    System.out.println("era muro, no añado");
                         }
                     }
                 }
             }
-        }
-        
+            else
+                System.out.println("Es un muro, así que no expando");
+        }   
         return solucion;
     }
 
