@@ -243,7 +243,7 @@ public class AgenteBot extends SingleAgent {
                 System.err.println("Agente Bot: Key incorrecta");
                 vivo = false;
             }
-
+            int iter=0;
             while (vivo) {
                 //Esperar nivel de batería de agente entorno
                 System.out.println("\nAgente Bot: Esperando recibir mensaje...");
@@ -254,7 +254,11 @@ public class AgenteBot extends SingleAgent {
                 nivelBateria = valorResult.getAsFloat();
                 
                 System.out.println("Agente Bot: nivel bateria recibido: "+nivelBateria);
-                
+                if(iter==0){ 
+                    Coord auxz=triangularObjetivo2();
+                    System.out.println("Coordenadas del objetivo obtenidas por triangulación: x="
+                    +auxz.getX()+", y="+auxz.getY());
+                }
                 // Tomar decisión
                 Accion decision = null;
                 if (this.mapa.getConectado().get(this.mapa.getCoord()).getRadar() == 2) {
@@ -308,6 +312,7 @@ public class AgenteBot extends SingleAgent {
                         System.err.println("Agente Bot: Resultado inesperado\n" + respuesta);
                     }
                 }
+                iter++;
             }
         } catch (InterruptedException e) {
             System.err.println("\n----ERROR EN BOT PRINCIPAL----\n" + e.getMessage());
@@ -863,5 +868,187 @@ public class AgenteBot extends SingleAgent {
         Coord c=new Coord(coordenada_x,coordenada_y);
         
         return c;
+    }
+    
+    /**
+     * Función para triangular la posición del objetivo a partir de los datos
+     * del scanner en la última percepción
+     * @author Antonio Troitiño del Río
+     * @return objetivo: posición del objetivo 
+     */
+        public Coord triangularObjetivo2(){
+        Coord objetivo=new Coord(0,0);
+        ArrayList<Nodo> perception = mapa.getLastPerception();
+        Coord A,C;
+        A=perception.get(20).getCoord();
+        C=perception.get(0).getCoord();
+        double b=distanciaEuclidea(A,C);
+        double a=perception.get(0).getScanner();
+        double c=perception.get(20).getScanner();
+        double alpha = Math.acos(((b*b)+(c*c)-(a*a))/(2.0*b*c));
+
+        double x,x1,y,y1;
+        x=(C.getX()-A.getX())/b;
+        x=x*c;
+        y=(C.getY()-A.getY())/b;
+        y=y*c;
+        if(perception.get(0).getScanner()<perception.get(1).getScanner()){
+        x1=x*Math.cos(alpha)+y*Math.sin(alpha)+A.getX();
+        y1=y*Math.cos(alpha)-x*Math.sin(alpha)+A.getY();
+        }else{
+        x1=x*Math.cos(alpha)-y*Math.sin(alpha)+A.getX();
+        y1=y*Math.cos(alpha)+x*Math.sin(alpha)+A.getY();  
+        }
+        objetivo.setX(redondear(x1));
+        objetivo.setY(redondear(y1));
+        mapa.setObjetivoTriangulado(objetivo);
+        return objetivo;
+    };
+    /**
+     * Método para calcular la distancia euclídea entre dos puntos especificados
+     * mediante objetos de tipo Coord
+     * @param A Coordenada del primer punto
+     * @param B Coordenada del segundo punto
+     * @author Antonio Troitiño del Río
+     * @return distancia euclídea entre ambos puntos
+     */
+    public double distanciaEuclidea(Coord A, Coord B){
+        double res = Math.sqrt(((B.getX()-A.getX())*(B.getX()-A.getX()))+((B.getY()-A.getY())*(B.getY()-A.getY())));
+        return res;
+    }
+    /**
+     * Método para redondear un double a int, de forma que si la parte decimal
+     * vale más de 0.5 devuelva el siguiente entero, y el anterior en caso contrario
+     * @author Antonio Troitiño
+     * @param num numero a redondear
+     * @return 
+     */
+    public int redondear(double num){
+        double aux=num;
+        int res=0;
+        res=(int) aux;
+        if(aux>0){
+        aux=aux-res;
+        if(aux>0.5) res++;
+        }
+        else{
+        aux=aux-res;
+        if(aux<-0.5) res--;
+        }
+        return res;
+    }
+    
+       /**
+     * Dada una coordenada devuelve las coordenadas de la dirección deseada
+     *
+     * @author Fco Javier Ortega Rodríguez
+     * @param direccion  0=NW    1=N     2=NE
+     *                   3=W      X      4=E
+     *                   5=SW    6=S     7=SE
+     * @param coordenada Coordenada donde situarse
+     * @return Coordenada de la direccion
+     */
+    public Coord getAdyacente(Coord coordenada, int direccion){
+        Coord miCoordenada = new Coord(coordenada.getX(), coordenada.getY());
+       
+        switch(direccion){
+            case 0:
+                System.out.print("NW ");
+                miCoordenada.setX( coordenada.getX()-1 );
+                miCoordenada.setY( coordenada.getY()-1 );
+                break;
+            case 1:
+                System.out.print("N ");
+                miCoordenada.setY( coordenada.getY()-1 );
+                break;
+            case 2:
+                System.out.print("NE ");
+                miCoordenada.setX( coordenada.getX()-1 );
+                miCoordenada.setY( coordenada.getY()+1 );
+                break;
+            case 3:
+                System.out.print("W ");
+                miCoordenada.setX( miCoordenada.getX()-1 );
+                break;
+            case 4:
+                System.out.print("E ");
+                miCoordenada.setX( miCoordenada.getX()+1 );
+                break;
+            case 5:
+                System.out.print("SW ");
+                miCoordenada.setX( miCoordenada.getX()-1 );
+                miCoordenada.setY( miCoordenada.getY()+1 );
+                break;
+            case 6:
+                System.out.print("S ");
+                miCoordenada.setY( miCoordenada.getY()+1 );
+                break;
+            case 7:
+                System.out.print("SE ");
+                miCoordenada.setX( miCoordenada.getX()+1 );
+                miCoordenada.setX( miCoordenada.getX()+1 );
+                break;
+        }
+       
+        return miCoordenada;
+    }
+   
+    /**
+     * Metodo que explora el mapa para determinar si puede existir solución o ésta es inalcanzable
+     * @author Jco Javier Ortega Rodríguez
+     * @param destino Coordenadas de destino
+     * @return false si es imposible llegar al destino, true cualquier otro caso
+     */
+    public boolean puedeExistirSolucion(Coord destino){
+        ArrayList<Coord> abiertos = new ArrayList<>();
+        ArrayList<Coord> cerrados = new ArrayList<>();
+        Coord aux, actual;
+        boolean solucion = false;
+       
+        cerrados.add(destino);
+       
+        //System.out.println("Destino: (" + destino.getX() + "," + destino.getY() + ")");
+        //System.out.print("Hijos generados: ");
+       
+        for(int i=0; i<8; i++){
+            aux = getAdyacente(destino, i);
+            abiertos.add( aux );
+            //System.out.print("(" + aux.getX() + "," + aux.getY() + ") ");
+        }
+       
+        //System.out.print("\n");
+       
+        while(abiertos.size()>0){
+            aux = abiertos.get(0);
+            cerrados.add(aux);
+            abiertos.remove(0);
+           
+            //System.out.println("\nExpandiendo: (" + aux.getX() + "," + aux.getY() + ")");
+           
+            for(int i=0; i<8; i++){
+                actual = getAdyacente(aux, i);
+                //System.out.println("Actual (" + actual.getX() + "," + actual.getY() + ")");
+               
+                if(mapa.getConectado().containsKey( actual )){
+                    //System.out.println("Solución alcanzable");
+                    return true;
+                }
+                else{
+                    //System.out.println("La coordenada (" + actual.getX() + "," + actual.getY() + ") no estaba conectada");
+                   
+                    if(!mapa.getMuros().containsKey( actual ) && !cerrados.contains( actual )){
+                            //System.out.println("La coordenada (" + actual.getX() + "," + actual.getY() + ") estaba sin explorar");
+                           
+                            if(actual.getX()>=0 && actual.getY()>=0){
+                                //System.out.println("añadia a abiertos");
+                                abiertos.add( actual );
+                            }else{
+                                //System.out.println("fuera del mapa");
+                            }
+                    }
+                }
+            }
+        }
+        return solucion;
     }
 }
