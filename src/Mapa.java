@@ -32,6 +32,10 @@ public class Mapa {
         }
         return Mapa.instancia;
     }
+    /**
+     * Coordenadas del objetivo obtenidas mediante triangulación
+     */
+    private Coord objT=null;
 
     /**
      * Mapa representando el grafo de nodos conectado con la posición del agente
@@ -139,6 +143,23 @@ public class Mapa {
      */
     public int getY() {
         return this.coord.getY();
+    }
+   /**
+     * Getter para devolver las coordenadas del objetivo
+     *
+     * @return Coordenadas del objetivo
+     * @author Antonio Troitiño
+     */
+    public Coord getObjetivoTriangulado() {
+        return this.objT;
+    }
+   /**
+     * Setter para guardar las coordenadas del objetivo
+     * @param obj1 Coordenadas del objetivo obtenidas por triangulación
+     * @author Antonio Troitiño
+     */
+    public void setObjetivoTriangulado(Coord obj1) {
+        this.objT=obj1;
     }
 
     /**
