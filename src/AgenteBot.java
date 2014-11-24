@@ -596,39 +596,35 @@ public class AgenteBot extends SingleAgent {
         switch (direccion) {
             case 0:
                 System.out.print("NW ");
-                miCoordenada.setX(coordenada.getX() - 1);
-                miCoordenada.setY(coordenada.getY() - 1);
+                miCoordenada = coordenada.NO();
                 break;
             case 1:
                 System.out.print("N ");
-                miCoordenada.setY(coordenada.getY() - 1);
+                miCoordenada = coordenada.N();
                 break;
             case 2:
                 System.out.print("NE ");
-                miCoordenada.setX(coordenada.getX() - 1);
-                miCoordenada.setY(coordenada.getY() + 1);
+                miCoordenada = coordenada.NE();
                 break;
             case 3:
                 System.out.print("W ");
-                miCoordenada.setX(miCoordenada.getX() - 1);
+                miCoordenada = coordenada.O();
                 break;
             case 4:
                 System.out.print("E ");
-                miCoordenada.setX(miCoordenada.getX() + 1);
+                miCoordenada = coordenada.E();
                 break;
             case 5:
                 System.out.print("SW ");
-                miCoordenada.setX(miCoordenada.getX() - 1);
-                miCoordenada.setY(miCoordenada.getY() + 1);
+                miCoordenada = coordenada.SO();
                 break;
             case 6:
                 System.out.print("S ");
-                miCoordenada.setY(miCoordenada.getY() + 1);
+                miCoordenada = coordenada.S();
                 break;
             case 7:
                 System.out.print("SE ");
-                miCoordenada.setX(miCoordenada.getX() + 1);
-                miCoordenada.setX(miCoordenada.getX() + 1);
+                miCoordenada = coordenada.SE();
                 break;
         }
 
